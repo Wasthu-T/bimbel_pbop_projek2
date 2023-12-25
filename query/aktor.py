@@ -48,64 +48,102 @@ class Siswa:
             else :
                 print("pilihan tidak tersedia harap pilih yang benar")
 
-    def insert_pelajar(self):
-        print("===== Input Pelajar =====")
+    def insert_siswa(self):
+        print("===== Input Siswa =====")
+        Id_paket_belajar = int(input("Masukan ID Paket Belajar\t: "))
+
         Nama = str(input("Masukan Nama\t: "))
+        Password = str(input("Masukan Password\t: "))
         Email = self.check_email()
         Nomor = "0" + str(int(input("Masukan Nomor\t: ")))
-
-        Jenjang_pendidikan = self.kelas()
+        Kelas = self.kelas()
         Jenis_kelamin = self.jenis_kelamin()
-        Password = str(input("Masukan Password: "))
+        Alamat = str(input("Masukkan Alamat\t: "))
+        Tagihan = str(input("Masukan Jumlah Tagihan\t: "))
         x = PrettyTable()
-        x.field_names = ["Nama", "Email", "Nomor", "Jenjang_pendidikan", "Jenis_kelamin", "Password"]
-        x.add_row([Nama, Email, Nomor, Jenjang_pendidikan, Jenis_kelamin, Password])
+        x.field_names = ["Id_paket_belajar","Nama", "Password", "Email", "Nomor", "Kelas", "Jenis_kelamin", "Alamat", "Tagihan"]
+        x.add_row([Id_paket_belajar, Nama, Password, Email, Nomor, Kelas, Jenis_kelamin, Alamat, Tagihan])
         print(x)
         yakin = str(input("Yakin ingin mendaftar y/n? "))
         if (yakin == 'y') :
-            quary = """INSERT INTO pelajar(Nama, Email, Nomor, Jenjang_pendidikan, Jenis_kelamin, Password) VALUES (%s, %s, %s, %s, %s, %s)"""
-            data = (Nama, Email, Nomor, Jenjang_pendidikan, Jenis_kelamin, Password)
+            quary = """INSERT INTO pelajar(Id_paket_belajar, Nama, Password, Email, Nomor, Kelas, Jenis_kelamin, Alamat, Tagihan) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+            data = (Id_paket_belajar, Nama, Password, Email, Nomor, Kelas, Jenis_kelamin, Alamat, Tagihan)
 
             self.db.insertValue(quary,data)
-            print("=== Anda Berhasil Mendaftar Sebagai Pelajar ===")
+            print("=== Anda Berhasil Mendaftar Sebagai Siswa ===")
         else : 
-            print("=== Anda Gagal Mendaftar Sebagai Pelajar ===")
+            print("=== Anda Gagal Mendaftar Sebagai Siswa ===")
 
-    def update_pelajar(self):
-        print("=== Update Pelajar ===")
-        Id_pelajar = int(input("Masukkan ID Pelajar yang akan diupdate: "))
-        query = """SELECT * FROM pelajar WHERE Id_pelajar = %s"""
-        data = (Id_pelajar,)
+    def edit_siswa(self, result, Id_siswa) :
+        Nama = result[0][1]
+        Password = result[0][2]
+        Email = result[0][3]
+        Nomor = result[0][4]
+        Alamat = result[0][5]
+        while True :
+            print("=== Edit Value ===")
+            print("1. Nama")
+            print("2. Password")
+            print("3. Email")
+            print("4. Nomor")
+            print("5. Alamat")
+            pilih = int(input("Data yang ingin diubah : "))
+            if pilih == 1:
+                Nama = str(input("Masukan Nama\t: "))
+            elif pilih == 2:
+                Password = str(input("Masukan Password\t: "))
+            elif pilih == 3:
+                Email = self.check_email()
+            elif pilih == 4:
+                Nomor = "0" + str(int(input("Masukan Nomor\t: ")))
+            elif pilih == 5:
+                Alamat = str(input("Masukkan Alamat\t: "))
+            else : 
+                print("Pilihan tidak tersedia")
+            lanjut = str(input("Ganti data lain (y/n)? "))
+            if lanjut == 'y' :
+                continue
+            else :
+                break
+        query = """UPDATE siswa SET `Nama`= %s, `Password`= %s , `Email`= %s, `Nomor`= %s, `Alamat`= %s WHERE `Id_siswa` = %s"""
+        data = (Nama, Email, Nomor, Password, Id_siswa)
+        self.db.insertValue(query, data)
+
+    def update_siswa(self):
+        print("=== Update Siswa ===")
+        Id_siswa = int(input("Masukkan ID Siswa yang akan diupdate: "))
+        query = """SELECT * FROM siswa WHERE Id_siswa = %s"""
+        data = (Id_siswa,)
         self.db.selectValuepretty(query, data)
         result = self.db.selectValue(query, data)
 
 
         test = str(input("Apa data ingin diupdate (y/n)? "))
         if test.lower() == 'y' :
-            self.edit(result, Id_pelajar)
-            print("=== Anda Berhasil Meng-update Data Pelajar ===")
+            self.edit(result, Id_siswa)
+            print("=== Anda Berhasil Meng-update Data Siswa ===")
         else :
-            print("=== Anda Gagal Meng-update Data Pelajar ===")
+            print("=== Anda Gagal Meng-update Data Siswa ===")
 
-    def delete_pelajar(self):
-        print("=== Delete Pelajar ===")
-        Id_pelajar = int(input("Masukkan ID Pelajar yang akan dihapus: "))
-        query = """SELECT * FROM pelajar WHERE Id_pelajar = %s"""
-        data = (Id_pelajar,)
+    def delete_siswa(self):
+        print("=== Delete Siswa ===")
+        Id_siswa = int(input("Masukkan ID Siswa yang akan dihapus: "))
+        query = """SELECT * FROM siswa WHERE Id_siswa = %s"""
+        data = (Id_siswa,)
         self.db.selectValuepretty(query, data)
         test = str(input("Apa data ingin dihapus (y/n)? "))
         if test.lower() == 'y' :
-            query = """DELETE FROM pelajar WHERE Id_pelajar = %s """
-            data = (Id_pelajar,)
+            query = """DELETE FROM siswa WHERE Id_siswa = %s """
+            data = (Id_siswa,)
             self.db.insertValue(query, data)
-            print("=== Anda Berhasil Menghapus Data Pelajar ===")
+            print("=== Anda Berhasil Menghapus Data Siswa ===")
             
         else :
-            print("=== Anda Gagal Menghapus Data Pelajar ===")
+            print("=== Anda Gagal Menghapus Data Siswa ===")
 
-    def read_pelajar(self):
-        print("=== Read Pelajar ===")
-        query = """SELECT * FROM pelajar"""
+    def read_siswa(self):
+        print("=== Read Siswa ===")
+        query = """SELECT * FROM siswa"""
         self.db.selectValuepretty(query, data=None)
 
 class Guru:
