@@ -8,7 +8,58 @@ import locale
 locale.setlocale(locale.LC_TIME, 'id_ID')
 
 class absen_pegawai :
-    pass
+    def __init__(self, db):
+        self.db = db
+
+    def absen_datang(self, Id_pegawai) :
+        tanggal = datetime.now().date()
+        jam_datang = datetime.now().time()
+        Jam_selesai = None
+        Absen = "Alpha"
+        query = """INSERT INTO `absen_pegawai`(`Id_pegawai`, `Tanggal`, `Jam_datang`, `Jam_selesai`, `Absen`) 
+                VALUES 
+                (%s,%s,%s,%s,%s)"""
+        data = (Id_pegawai, tanggal, jam_datang, Jam_selesai, Absen)
+        self.db.insertValue(query,data)
+    
+
+    def absen_pulang(self, Id_pegawai) :
+        tanggal = datetime.now().date()
+        Jam_selesai = datetime.now().time()
+        Absen = "Hadir"
+        query = """
+            UPDATE `absen_pegawai` 
+            SET
+            `Jam_selesai` = %s,
+            `Absen` = %s 
+            WHERE `Tanggal` = %s AND `Id_pegawai` = %s
+        """
+        data = (Jam_selesai, Absen, tanggal, Id_pegawai)
+        self.db.insertValue(query, data)
+    
+    def absen(self) :
+        while True:
+            print("\n=== Izin ===")
+            print("1. Sakit")
+            print("2. Izin")
+            pilih = int(input("Pilih Absensi\t: "))
+            if pilih == 1:
+                return "Sakit"
+            elif pilih == 2:
+                return "Izin"
+            else:
+                print("pilihan tidak tersedia harap pilih yang benar")
+    
+    def izin(self,Id_pegawai) :
+        tanggal = datetime.now().date()
+        jam_datang = None
+        Jam_selesai = None
+        Absen = self.absen()
+        query = """INSERT INTO `absen_pegawai`(`Id_pegawai`, `Tanggal`, `Jam_datang`, `Jam_selesai`, `Absen`) 
+                VALUES 
+                (%s,%s,%s,%s,%s)"""
+        data = (Id_pegawai, tanggal, jam_datang, Jam_selesai, Absen)
+        self.db.insertValue(query,data)
 
 class absen_guru:
     def absen(self):
