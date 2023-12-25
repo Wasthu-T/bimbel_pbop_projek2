@@ -432,7 +432,7 @@ class Pegawai:
         return gaji
 
     def insert_pegawai(self): #done
-        print("===== Input Admin =====")
+        print("===== Input Pegawai =====")
         Nama = str(input("Masukan Nama\t: "))
         Email = self.check_email()
         password = self.confirm_password()
@@ -442,8 +442,8 @@ class Pegawai:
         alamat = str(input("Masukan alamat\t:"))
         status = self.Status_pekerja()
         jabatan = self.Jabatan()
-        Tunjangan = self.Tunjangan(status)
-        gaji = self.gaji(jabatan,Tunjangan)
+        gaji = self.gaji(jabatan)
+        Tunjangan = self.Tunjangan(status, gaji)
 
         
         x = PrettyTable()
