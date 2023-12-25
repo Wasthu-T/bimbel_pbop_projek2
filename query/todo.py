@@ -103,12 +103,17 @@ class jadwal :
         Id_ruangan = int(input("Masukkan ID Ruangan\t: "))
         Paket_belajar = input("Masukkan Jenis Paket Belajar (Reguler/Premium)\t: ").capitalize()
 
-        query = """INSERT INTO jadwal(Id_guru, Kelas, Mapel, Jam, Tanggal, Id_ruangan, Paket_belajar) 
-                   VALUES (%s, %s, %s, %s, %s, %s, %s)"""
-        data = (Id_guru, Kelas, Mapel, Jam, Tanggal, Id_ruangan, Paket_belajar)
+        confirm = input("Apakah anda ingin melanjutkan tindakan ini (y/n): ")
+        
+        if confirm == 'y':
+            query = """INSERT INTO jadwal(Id_guru, Kelas, Mapel, Jam, Tanggal, Id_ruangan, Paket_belajar) 
+                    VALUES (%s, %s, %s, %s, %s, %s, %s)"""
+            data = (Id_guru, Kelas, Mapel, Jam, Tanggal, Id_ruangan, Paket_belajar)
 
-        self.db.insertValue(query, data)
-        print("=== Anda Berhasil Meng-input Data Jadwal ===")
+            self.db.insertValue(query, data)
+            print("=== Anda Berhasil Meng-input Data Jadwal ===")
+        else:
+            print("=== Insert data anda gagal ===")
 
     def update_jadwal(self):
         print("=== Update Jadwal ===")
@@ -218,10 +223,93 @@ class jadwal :
         self.db.selectValueprettey(query, data=None)
         print("=== Anda Berhasil menampilkan Data Jadwal ===")
 
-
 class jadwal_pelayanan :
-    pass
-
+    def __init__(self, db):
+        self.db = db
+        
+    def mapel(self):
+        while True:
+            print("\n=== Mata Pelajaran ===")
+            mapel = [
+                'Bahasa Inggris', 'Ilmu Pengetahuan Alam', 'Tes Potensi Skolastik', 'Matematika',
+                'Bahasa Indonesia', 'Biologi', 'Kimia', 'Geografi', 'Ekonomi',
+                'Sosiologi', 'Sejarah', 'Fisika'
+            ]       
+            for idx, pelajaran in enumerate(mapel, 1):
+                print(f"{idx}. {pelajaran}")
+            opsi = int(input("Pilih Mata Pelajaran\t:"))
+            if 1 <= opsi <= len(mapel):
+                return mapel[opsi - 1]
+            else:
+                print("Pilihan tidak tersedia")
+                
+    def insert_jadwal_pelayanan(self):
+        print("=== Input Jadwal Pelayanan ===")
+        Id_guru = int(input("Masukkan ID Guru: "))
+        Mapel = self.mapel().capitalize()
+        Jam_pelayanan = input("Masukkan Jam Pelayanan (format: HH:MM:SS): ")
+        Id_ruangan = int(input("Masukkan ID Ruangan: "))
+        
+        confirm = input("Apakah anda ingin melanjutkan tindakan ini (y/n): ")
+        
+        if confirm == 'y':
+            query = """INSERT INTO jadwal_pelayanan(Id_guru, Mapel, Jam_pelayanan, Id_ruangan) VALUES (%s, %s, %s, %s)"""
+            data = (Id_guru, Mapel, Jam_pelayanan, Id_ruangan)
+            self.db.insertValue(query, data)
+            print("=== Data Jadwal Pelayanan berhasil diinput ===")
+        else:
+            print("Gagal Memuat data.")
+            
+    def update_jadwal_pelayanan(self):
+        print("=== Update Jadwal Pelayanan ===")
+        
+        Id_jadwal_pelayanan = int(input("Masukkan ID Jadwal Pelayanan yang akan diupdate: "))
+        
+        query = """SELECT * FROM jadwal_pelayanan WHERE Id_jadwal_pelayanan = %s"""
+        data = (Id_jadwal_pelayanan,)
+        
+        self.db.selectValuepretty(query, data)
+        
+        confirmation = input("Apakah Anda ingin melanjutkan proses update (y/n)? ").lower()
+        
+        if confirmation == 'y':
+            Mapel = self.mapel().capitalize()
+            Jam_pelayanan = input("Masukkan jam pelayanan baru (format: HH:MM:SS): ")
+            Id_ruangan = int(input("Masukkan ID ruangan baru: "))
+            
+            update_query = """UPDATE jadwal_pelayanan SET Mapel=%s, Jam_pelayanan=%s, Id_ruangan=%s WHERE Id_jadwal_pelayanan=%s"""
+            
+            new_data = (Mapel, Jam_pelayanan, Id_ruangan, Id_jadwal_pelayanan)
+            
+            self.db.insertValue(update_query, new_data)
+            
+            print("=== Data Jadwal Pelayanan berhasil diupdate ===")
+        else:
+            print("=== Proses update dibatalkan ===")
+            
+    def delete_jadwal_pelayanan(self):
+        print("=== Delete Jadwal Pelayanan ===")
+        
+        Id_jadwal_pelayanan = int(input("Masukkan ID Jadwal Pelayanan yang akan dihapus: "))
+        
+        query = """SELECT * FROM jadwal_pelayanan WHERE Id_jadwal_pelayanan = %s"""
+        data = (Id_jadwal_pelayanan,)
+        
+        self.db.selectValuepretty(query, data)
+        
+        confirmation = input("Apakah Anda yakin ingin menghapus data ini (y/n)? ").lower()
+        
+        if confirmation == 'y':
+            delete_query = """DELETE FROM jadwal_pelayanan WHERE Id_jadwal_pelayanan = %s"""
+            self.db.insertValue(delete_query, (Id_jadwal_pelayanan,))
+            print("=== Data Jadwal Pelayanan berhasil dihapus ===")
+        else:
+            print("=== Proses penghapusan dibatalkan ===")
+            
+    def read_jadwal_pelayanan(self):
+        print("=== Read Jadwal Pelayanan ===")
+        query = """SELECT * FROM jadwal_pelayanan"""
+        self.db.selectValuepretty(query, data=None)
 class ruangan :
     def __init__(self, db):
         self.db = db
