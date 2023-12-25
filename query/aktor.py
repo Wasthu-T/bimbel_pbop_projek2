@@ -287,7 +287,7 @@ class Guru:
         query = """SELECT * FROM Guru"""
         self.db.selectValuepretty(query, data=None)
 
-    def read_jadwal_pengajar(self):
+    def read_jadwal_guru(self):
         while True:
             try:
                 Id_guru = int(input("Masukkan ID Pengajar Anda: "))
@@ -297,6 +297,24 @@ class Guru:
                 
                 if result:
                     query = """SELECT * FROM jadwal WHERE Id_guru = %s"""
+                    data = (Id_guru,)
+                    self.db.selectValuepretty(query, data)
+                    break
+                else:
+                    print("ID Guru tidak ditemukan. Coba lagi!")
+            except ValueError:
+                print("Masukkan ID Guru dalam bentuk angka")
+                
+    def read_jadwal_pelayanan_guru(self):
+        while True:
+            try:
+                Id_guru = int(input("Masukkan ID Pengajar Anda: "))
+                query_check = """SELECT * FROM Guru WHERE Id_guru = %s"""
+                data_check = (Id_guru,)
+                result = self.db.selectValue(query_check, data_check)
+
+                if result:
+                    query = """SELECT * FROM Jadwal_pelayanan WHERE Id_guru = %s"""
                     data = (Id_guru,)
                     self.db.selectValuepretty(query, data)
                     break
