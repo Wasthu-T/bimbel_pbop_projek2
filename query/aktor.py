@@ -225,65 +225,85 @@ class Guru:
                 print("pilihan tidak tersedia harap pilih yang benar")
 
 
-    def insert_pengajar(self):
-        print("===== Input Pengajar =====")
+    def instert_guru(self):
+        print("===== Input Data Guru =====")
         Nama = str(input("Masukan Nama\t: "))
         Email = self.check_email()
-        Nomor = "0" + str(int(input("Masukan Nomor\t: ")))
-
-        Usia = self.umur()
+        Nomor = "0" + str(int(input("Masukkan Nomor\t: ")))
         Jenis_kelamin = self.jenis_kelamin()
-        Password = str(input("Masukan Password: "))
+        Tgl_lahir = str(input("Masukan Tanggal Lahir (format: YYYY-MM-DD)\t: "))
+        Alamat = str(input("Masukan Alamat\t: "))
+        Status_pekerja = str(input("Masukkan Status Pekerja (Kontrak/Tetap)\t: "))
+        Bidang_mapel = self.bidang_mapel()
+        Gaji = str(input("Masukkan Gaji\t: "))
+        
         x = PrettyTable()
-        x.field_names = ["Nama", "Email", "Nomor", "Usia", "Jenis_kelamin", "Password"]
-        x.add_row([Nama, Email, Nomor, Usia, Jenis_kelamin, Password])
+        x.field_names = ["Nama", "Email", "Nomor", "Jenis_kelamin", "Tgl_lahir", "Alamat", "Status_pekerja", "Bidang_mapel", "Gaji"]
+        x.add_row([Nama, Email, Nomor, Jenis_kelamin, Tgl_lahir, Alamat, Status_pekerja, Bidang_mapel, Gaji])
         print(x)
-        yakin = str(input("Yakin ingin mendaftar y/n? "))
-        if (yakin == 'y') and (Usia is not None):
-            quary = """INSERT INTO pengajar(Nama, Email, Nomor, Usia, Jenis_kelamin, Password) VALUES (%s, %s, %s, %s, %s, %s)"""
-            data = (Nama, Email, Nomor, Usia, Jenis_kelamin, Password)
+        
+        yakin = str(input("Yakin ingin menambah data guru y/n? "))
+        if yakin == 'y':
+            query = """INSERT INTO Guru(Nama, Email, Nomor, Jenis_kelamin, Tgl_lahir, Alamat, Status_pekerja, Bidang_mapel, Gaji) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+            data = (Nama, Email, Nomor, Jenis_kelamin, Tgl_lahir, Alamat, Status_pekerja, Bidang_mapel, Gaji)
+            self.db.insertValue(query, data)
+            print("=== Anda Berhasil Menambahkan Data Guru ===")
+        else:
+            print("=== Anda Gagal Menambahkan Data Guru ===")
 
-            self.db.insertValue(quary,data)
-            print("=== Anda Berhasil Mendaftar Sebagai Pengajar ===")
-        else : 
-            print("=== Anda Gagal Mendaftar Sebagai Pengajar ===")
-
-    def update_pengajar(self):
-        print("===== Update Pengajar =====")
-        Id_pengajar = int(input("Masukkan ID Pengajar yang akan diupdate: "))
-        query = """SELECT * FROM pengajar WHERE Id_pengajar = %s"""
-        data = (Id_pengajar,)
+    def update_guru(self):
+        print("===== Update Guru =====")
+        Id_guru = int(input("Masukkan ID Guru yang akan diupdate: "))
+        query = """SELECT * FROM Guru WHERE Id_guru = %s"""
+        data = (Id_guru,)
         self.db.selectValuepretty(query, data)
         result = self.db.selectValue(query, data)
 
 
         test = str(input("Apa data ingin diupdate (y/n)? "))
-        if test.lower() == 'y' :
-            self.edit(result, Id_pengajar)
-            print("=== Anda Berhasil Meng-update Data Pengajar ===")
-        else :
-            print("=== Anda Gagal Meng-update Data Pengajar ===")
+        if test.lower() == 'y':
+            self.edit(result, Id_guru)
+            print("=== Anda Berhasil Meng-update Data Guru ===")
+        else:
+            print("=== Anda Gagal Meng-update Data Guru ===")
 
-    def delete_pengajar(self):
-        print("===== Delete Pengajar =====")
-        Id_pengajar = int(input("Masukkan ID Pengajar yang akan dihapus: "))
-        query = """SELECT * FROM pengajar WHERE Id_pengajar = %s"""
-        data = (Id_pengajar,)
+    def delete_guru(self):
+        print("===== Delete Guru =====")
+        Id_guru = int(input("Masukkan ID Guru yang akan dihapus: "))
+        query = """SELECT * FROM Guru WHERE Id_guru = %s"""
+        data = (Id_guru,)
         self.db.selectValuepretty(query, data)
         test = str(input("Apa data ingin dihapus (y/n)? "))
-        if test.lower() == 'y' :
-            query = """DELETE FROM pengajar WHERE Id_pengajar = %s """
-            data = (Id_pengajar,)
+        if test.lower() == 'y':
+            query = """DELETE FROM Guru WHERE Id_guru = %s """
+            data = (Id_guru,)
             self.db.insertValue(query, data)
-            print("=== Anda Berhasil Menghapus Data Pengajar ===")
+            print("=== Anda Berhasil Menghapus Data Guru ===")
+        else:
+            print("=== Anda Gagal Menghapus Data Guru ===")
             
-        else :
-            print("=== Anda Gagal Menghapus Data Pengajar ===")
-
-    def read_pengajar(self):
-        print("===== Read Pengajar =====")
-        query = """SELECT * FROM pengajar"""
+    def read_guru(self):
+        print("===== Read Guru =====")
+        query = """SELECT * FROM Guru"""
         self.db.selectValuepretty(query, data=None)
+
+    def read_jadwal_pengajar(self):
+        while True:
+            try:
+                Id_guru = int(input("Masukkan ID Pengajar Anda: "))
+                query_check = """SELECT * FROM guru WHERE Id_guru = %s """
+                data_check = (Id_guru,)
+                result = self.db.selectValue(query_check, data_check)
+                
+                if result:
+                    query = """SELECT * FROM jadwal WHERE Id_guru = %s"""
+                    data = (Id_guru,)
+                    self.db.selectValuepretty(query, data)
+                    break
+                else:
+                    print("ID Guru tidak ditemukan. Coba lagi!")
+            except ValueError:
+                print("Masukkan ID Guru dalam bentuk angka")
 
 class Pegawai:
     def __init__(self, db):
