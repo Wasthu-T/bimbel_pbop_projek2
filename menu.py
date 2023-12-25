@@ -3,6 +3,8 @@ from connector import database
 from createtable import created_table
 from sampledata import created_data
 from query.aktor import Siswa, Guru, Pegawai
+from query.todo import login
+from query.akses import akses_Pegawai
 
 db = database()
 db.connect()
@@ -17,13 +19,14 @@ while True :
     print("=== RUANG  BELAJAR ===")
     print("="*22)
     print("===== Menu Akses =====")
-    print("===[1] Pengguna\t   ===")
-    print("===[2] Admin\t   ===")
+    print("===[1] Siswa\t   ===")
+    print("===[2] Guru \t   ===")
+    print("===[3] Pegawai\t   ===")
     print("===[0] Keluar\t   ===")
     print("======================")
     pilih = int(input("Pilih Menu : "))
     if pilih == 1 :
-        print("\n\t===== Menu Pengguna =====")
+        print("\n\t===== Menu Siswa =====")
         print("\t===[1] Registrasi      ==")
         print("\t===[2] Login           ==")
         print("\t=========================")
@@ -84,6 +87,28 @@ while True :
 
            pilih = int(input("Pilih Menu : "))
 
+        else :
+            print("=== Pilihan tidak tersedia ===")
+            print("=== Kembali ke menu utama ===")
+
+    elif pilih == 3 :
+        print("\n\t===== Menu Pegawai =====")
+        print("\t===[1] Registrasi      ==")
+        print("\t===[2] Login           ==")
+        print("\t=========================")
+
+        pilih = int(input("Pilih Menu : "))
+        if pilih == 1 :
+            peg = Pegawai(db)
+            peg.insert_pegawai()
+        elif pilih == 2 :
+            id = login(db)
+            get_id_name = id.cheking("pegawai")
+            id, nama = get_id_name
+            my = akses_Pegawai(db,id,nama)
+            my.menu()
+
+            
         else :
             print("=== Pilihan tidak tersedia ===")
             print("=== Kembali ke menu utama ===")
