@@ -106,7 +106,7 @@ class Siswa:
             else :
                 break
         query = """UPDATE siswa SET `Nama`= %s, `Password`= %s , `Email`= %s, `Nomor`= %s, `Alamat`= %s WHERE `Id_siswa` = %s"""
-        data = (Nama, Email, Nomor, Password, Id_siswa)
+        data = (Nama, Email, Nomor, Password, Alamat, Id_siswa)
         self.db.insertValue(query, data)
 
     def update_siswa(self):
@@ -120,7 +120,7 @@ class Siswa:
 
         test = str(input("Apa data ingin diupdate (y/n)? "))
         if test.lower() == 'y' :
-            self.edit(result, Id_siswa)
+            self.edit_siswa(result, Id_siswa)
             print("=== Anda Berhasil Meng-update Data Siswa ===")
         else :
             print("=== Anda Gagal Meng-update Data Siswa ===")
