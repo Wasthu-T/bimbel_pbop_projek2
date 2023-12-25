@@ -10,8 +10,92 @@ locale.setlocale(locale.LC_TIME, 'id_ID')
 class absen_pegawai :
     pass
 
-class absen_guru :
-    pass
+class absen_guru:
+    def absen(self):
+        while True:
+            print("\n=== Absensi Guru ===")
+            print("1. Hadir")
+            print("2. Sakit")
+            print("3. Izin")
+            print("4. Alpha")
+            pilih = int(input("Pilih Absensi\t: "))
+            if pilih == 1:
+                return "Hadir"
+            elif pilih == 2:
+                return "Sakit"
+            elif pilih == 3:
+                return "Izin"
+            elif pilih == 4:
+                return "Alpha"
+            else:
+                print("pilihan tidak tersedia harap pilih yang benar")
+
+    def insert_absen_guru(self, db):
+        print("=== Input Absen Guru ===")
+        Id_guru = int(input("Masukkan ID Guru\t: "))
+        date_str = input("Masukkan tanggal absensi (format: YYYY-MM-DD)\t: ")
+        date = datetime.strptime(date_str, "%Y-%m-%d")
+        Tanggal = date.date()
+        Jam_datang = input("Masukkan Jam Datang (format: HH:MM:SS)\t: ")
+        Jam_selesai = input("Masukkan Jam Selesai (format: HH:MM:SS)\t: ")
+        
+        Absen = self.absen()
+
+        x = PrettyTable()
+        x.field_names = ["Id_guru", "Tanggal", "Jam_datang", "Jam_selesai", "Absen"]
+        x.add_row([Id_guru, Tanggal, Jam_datang, Jam_selesai, Absen])
+        print(x)
+        
+        yakin = str(input("Yakin ingin meng-input y/n? "))
+        
+        if yakin == 'y':
+            query = """INSERT INTO absen_guru(Id_guru, Tanggal, Jam_datang, Jam_selesai, Absen) 
+                       VALUES (%s, %s, %s, %s, %s)"""
+            data = (Id_guru, Tanggal, Jam_datang, Jam_selesai, Absen)
+            self.db.insertValue(query,data)
+            print("=== Anda Berhasil Meng-input Absen Guru ===")
+        else:
+            print("=== Anda Gagal Meng-input Absen Guru ===")
+
+    def update_absen_guru(self):
+        print("=== Update Absen Guru ===")
+        Id_absen_guru = int(input("Masukkan ID Absen Guru yang akan diupdate: "))
+        Absen = self.absen()
+        Tanggal = input("Masukkan tanggal (format: YYYY-MM-DD): ")
+        Jam_datang = input("Masukkan jam datang (format: HH:MM:SS): ")
+        Jam_selesai = input("Masukkan jam selesai (format: HH:MM:SS): ")
+        
+        yakin = str(input("Yakin ingin meng-input y/n? "))
+        
+        if yakin == 'y':
+            query = """UPDATE absen_guru SET `Absen` = %s, `Tanggal` = %s, `Jam_datang` = %s, `Jam_selesai` = %s WHERE `Id_absen_guru` = %s"""
+            data = (Absen, Tanggal, Jam_datang, Jam_selesai, Id_absen_guru)
+            self.db.insertValue(query, data)
+            print("=== Anda Berhasil Meng-update Absensi Guru ===")
+        else:
+            print("=== Gagal update data ===")
+
+    def read_absen_guru(self):
+        print("=== Read Absen Guru ===")
+        query = """SELECT * FROM absen_guru"""
+        self.db.selectValuepretty(query, data=None)
+        print("=== Anda Berhasil Menampilkan Data Absensi Guru ===")
+
+    def delete_absen_guru(self):
+        print("=== Delete Absen Guru ===")
+        Id_guru = int(input("Masukkan ID Guru yang akan dihapus: "))
+        query = """SELECT * FROM absen_guru WHERE Id_guru = %s"""
+        data = (Id_guru,)
+        self.db.selectValuepretty(query, data)
+        
+        test = str(input("Apa data ingin dihapus (y/n)? "))
+        if test.lower() == 'y':
+            query = """DELETE FROM absen_guru WHERE Id_guru = %s"""
+            data = (Id_guru,)
+            self.db.insertValue(query, data)
+            print("=== Anda Berhasil Menghapus Absensi Guru ===")
+        else:
+            print("=== Anda Gagal Menghapus Absensi Guru ===")
 
 class absen_siswa :
     def absen(self):
