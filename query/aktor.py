@@ -358,53 +358,152 @@ class Pegawai:
             except EmailNotValidError as e:
                 print(str(e)) 
 
-    def insert_admin(self):
+    def confirm_password(self) :
+        while True :
+            try :
+                password = str(input("Masukan Password\t:"))
+                conf_pass = str(input("Masukan Password sekali lagi\t:"))
+                if password != conf_pass :
+                    raise ValueError("Masukan password yang benar")
+                return conf_pass
+            except Exception as e :
+                print(e)
+
+    def inp_tanggal(self) :
+        date_str = input("Masukkan tanggal tayang (format: YYYY-MM-DD)\t: ")
+        date = datetime.strptime(date_str, "%Y-%m-%d")
+        Tanggal = date.date() 
+        return Tanggal
+    
+    def Status_pekerja(self):
+        while True :
+            print("\n=== Status Pekerjaan ===")
+            print("1. Tetap")
+            print("2. Kontrak")
+            pilih = int(input("Pilih status : "))
+            if pilih == 1 :
+                return "Tetap"
+            elif pilih == 2 :
+                return "Kontrak"
+            else :
+                print("Pilihan tidak tersedia")
+    
+    def Jabatan(self) :
+        while True :
+            print("\n=== Jabatan Pekerjaan ===")
+            print("1. Manager")
+            print("2. Admin")
+            print("3. OB")
+            pilih = int(input("Pilih Jabatan : "))
+            if pilih == 1 :
+                return "Manager"
+            elif pilih == 2 :
+                return "Admin"
+            elif pilih == 3 :
+                return "OB"
+            else :
+                print("Pilihan tidak tersedia")
+
+    def Tunjangan(self, status, gaji) :
+        if status == "Tetap" :
+            istri = str(input("Apa kamu memiliki istri? (y/n) "))
+            if istri.lower() == "y" :
+                while True :
+                    anak = int(input("Kamu memiliki berapa anak? : "))
+                    ank = anak * 2/100
+                    tun1 = gaji * ank
+                    tun2 = gaji * 1/100
+                    final = tun1 + tun2
+                    return final      
+            else :
+                return 0 
+        else :
+            return 0
+        
+    def gaji(self,jabatan, tunjangan) :
+        if jabatan == "Manager" :
+            x = 5000000
+        elif jabatan == "Admin" :
+            x = 3000000
+        elif jabatan == "OB" :
+            x = 1000000
+
+        gaji = x + tunjangan
+        return gaji
+
+    def insert_pegawai(self): #done
         print("===== Input Admin =====")
         Nama = str(input("Masukan Nama\t: "))
         Email = self.check_email()
+        password = self.confirm_password()
         Nomor = "0" + str(int(input("Masukan Nomor\t: ")))
-
         Jenis_kelamin = self.jenis_kelamin()
-        Usia = self.umur()
+        tanggal = self.inp_tanggal()
+        alamat = str(input("Masukan alamat\t:"))
+        status = self.Status_pekerja()
+        jabatan = self.Jabatan()
+        Tunjangan = self.Tunjangan(status)
+        gaji = self.gaji(jabatan,Tunjangan)
+
+        
         x = PrettyTable()
-        x.field_names = ["Nama", "Email", "Nomor", "Usia", "Jenis_kelamin"]
-        x.add_row([Nama, Email, Nomor, Usia, Jenis_kelamin])
+        print("=== Data diri ===")
+        x.field_names = ["Nama", "Email", "Nomor", "Jenis_kelamin", "tanggal_lahir", "alamat"]
+        x.add_row([Nama, Email, Nomor,Jenis_kelamin,tanggal,alamat])
         print(x)
-        yakin = str(input("Yakin ingin menambah data y/n? "))
-        if (yakin == 'y') and (Usia is not None) :
-            quary = """INSERT INTO admin(Nama, Email, Nomor, Usia, Jenis_kelamin) VALUES (%s, %s, %s, %s, %s)"""
-            data = (Nama, Email, Nomor, Usia, Jenis_kelamin)
-
+        yakin = str(input("Data anda sudah benar (y/n) ?"))
+        if Nama and Email and Jenis_kelamin and tanggal and alamat and yakin.lower() == "y" :
+            quary = """INSERT INTO `pegawai`(`Nama`, `Password`, `Email`, `Nomor`, `Jenis_kelamin`, `Tgl_lahir`, `Alamat`, `Status_pekerja`, `Jabatan`, `Tunjangan`, `Gaji`) 
+            VALUES 
+            (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+            data = (Nama, password, Email, Nomor, Jenis_kelamin, tanggal,alamat,status,jabatan,Tunjangan,gaji)
             self.db.insertValue(quary,data)
-            print("=== Anda Berhasil Menambahkan Data Admin ===")
-        else : 
-            print("=== Anda Gagal Menambahkan Data Admin ===")
+            print("=== Anda Berhasil Mendaftar Sebagai Siswa ===")
 
-    def edit(self, result, Id_admin) :
+        else : 
+            print("=== Anda Gagal Mendaftar Sebagai Siswa ===")
+
+
+
+
+
+    def edit_pegawai(self, result, Id_pegawai) : #done
         Nama = result[0][1]
-        Email = result[0][2]
-        Nomor = result[0][3]
-        Usia = result[0][4]
+        Password = result[0][2]
+        Email = result[0][3]
+        Nomor = result[0][4]
+        Alamat = result[0][7]
+        Status_pekerja = result[0][8]
+        Jabatan = result[0][9]
+        Tunjangan = result[0][10]
         while True : 
             print("=== Edit value ===")
             print("1. Nama")
-            print("2. Email")
-            print("3. Nomor")
-            print("4. Usia")
+            print("2. Password")
+            print("3. Email")
+            print("4. Nomor")
+            print("5. Alamat")
+            print("6. Status_pekerja")
+            print("7. Jabatan")
+            print("8. Tunjangan")
             pilih = int(input("Data yang ingin diubah : "))
             if pilih == 1 :
                 Nama = str(input("Masukan Nama\t: "))
             elif pilih == 2 :
-                Email = self.check_email()
+                Password = self.confirm_password()
             elif pilih == 3 :
-                Nomor = "0" + str(int(input("Masukan Nomor\t: ")))
+                Email = self.check_email()
             elif pilih == 4 :
-                Usia = self.umur()
-                if int(Usia) <= int(result[0][4]) :
-                    print("Usia kamu turun?")
-                    Usia = result[0][4]
-                if Usia is None :
-                    Usia = result[0][4]
+                Nomor = "0" + str(int(input("Masukan Nomor\t: ")))
+            elif pilih == 5 :
+                Alamat = str(input("Masukan alamat\t:"))
+            elif pilih == 6 :
+                Status_pekerja = self.Status_pekerja()
+            elif pilih == 7 :
+                Jabatan = self.Jabatan()
+            elif pilih == 8 : 
+                Tunjangan = self.Tunjangan(Status_pekerja)
+
             else : 
                 print("Pilihan tidak tersedia")
             lanjut = str(input("Ganti data lain (y/n)? "))
@@ -412,37 +511,48 @@ class Pegawai:
                 continue
             else :
                 break
-        query = """UPDATE admin SET `Nama`= %s, `Email`= %s, `Nomor`= %s, `Usia`= %s  WHERE Id_admin = %s"""
-        data = (Nama, Email, Nomor, Usia, Id_admin)
+
+        gaji = self.gaji(Jabatan,Tunjangan)
+        query = """UPDATE `pegawai` SET 
+        `Nama`=%s,
+        `Password`=%s,
+        `Email`=%s,
+        `Nomor`=%s,
+        `Alamat`=%s,
+        `Status_pekerja`=%s,
+        `Jabatan`=%s,
+        `Tunjangan`=%s,
+        `Gaji`=%s 
+        WHERE `Id_pegawai`='%s'"""
+        data = (Nama, Password,Email, Nomor, Alamat,Status_pekerja,Jabatan,Tunjangan,gaji,Id_pegawai)
         self.db.insertValue(query, data)
 
-    def update_admin(self):
-        print("===== Update Admin =====")
-        Id_admin = int(input("Masukkan ID Admin yang akan diupdate: "))
-        query = """SELECT * FROM admin WHERE Id_admin = %s"""
-        data = (Id_admin,)
+    def update_pegawai(self, Id_pegawai): #done not yet testing
+        print("===== Update pegawai =====")
+        # Id_admin = int(input("Masukkan ID Admin yang akan diupdate: "))
+        query = """SELECT `Id_pegawai`, `Nama`, `Email`, `Nomor`, `Jenis_kelamin`, `Tgl_lahir`, `Alamat`, `Status_pekerja`, `Jabatan`, `Tunjangan`, `Gaji` FROM pegawai WHERE Id_pegawai = %s"""
+        data = (Id_pegawai,)
         self.db.selectValuepretty(query, data)
         result = self.db.selectValue(query, data)
 
 
         test = str(input("Apa data ingin diupdate (y/n)? "))
         if test.lower() == 'y' :
-            self.edit(result, Id_admin)
+            self.edit_pegawai(result, Id_pegawai)
             print("=== Anda Berhasil Meng-update Data Admin ===")
         else :
             print("=== Anda Gagal Meng-update Data Admin ===")
 
 
-    def delete_admin(self):
-        print("===== Delete Admin =====")
-        Id_admin = int(input("Masukkan ID Admin yang akan dihapus: "))
-        query = """SELECT * FROM admin WHERE Id_admin = %s"""
-        data = (Id_admin,)
+    def delete_admin(self, Id_pegawai):#done
+        print("===== Delete Pegawai =====")
+        query = """SELECT `Id_pegawai`, `Nama`, `Email`, `Nomor`, `Jenis_kelamin`, `Tgl_lahir`, `Alamat`, `Status_pekerja`, `Jabatan`, `Tunjangan`, `Gaji` FROM pegawai WHERE Id_pegawai = %s"""
+        data = (Id_pegawai,)
         self.db.selectValuepretty(query, data)
         test = str(input("Apa data ingin dihapus (y/n)? "))
         if test.lower() == 'y' :
-            query = """DELETE FROM admin WHERE Id_admin = %s """
-            data = (Id_admin,)
+            query = """DELETE FROM admin WHERE Id_pegawai = %s """
+            data = (Id_pegawai,)
             self.db.insertValue(query, data)
             print("=== Anda Berhasil Menghapus Data Admin ===")
             
