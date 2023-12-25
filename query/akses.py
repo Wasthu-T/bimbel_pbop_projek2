@@ -46,7 +46,8 @@ class akses_Pegawai(Pegawai):
                 exit()
             else :
                 print("Pilihan tidak tersedia")
-    
+            os.system('pause')
+
     def Absen_pegawai(self) :
         while True :
             print(f"=== selamat datang {self.nama} ===")
@@ -67,6 +68,7 @@ class akses_Pegawai(Pegawai):
                 self.menu()
             else :
                 print("Pilihan tidak tersedia")
+            os.system('pause')
 
 
     def Cari(self) :
@@ -84,6 +86,8 @@ class akses_Pegawai(Pegawai):
                 self.menu()
             else :
                 print("Pilihan tidak tersedia")
+            os.system('pause')
+
         
     def Insert(self) :
         while True :
