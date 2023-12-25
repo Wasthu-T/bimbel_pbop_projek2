@@ -8,14 +8,16 @@ paket_belajar ='''CREATE TABLE IF NOT EXISTS Paket_belajar(
 
 siswa = '''CREATE TABLE IF NOT EXISTS Siswa(
    Id_siswa int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+   Nama varchar(200) NOT NULL,
+   Password varchar(225) NOT NULL,
    Id_paket_belajar int(10),
    FOREIGN KEY (Id_paket_belajar) REFERENCES Paket_belajar(Id_paket_belajar) ON DELETE CASCADE,
-   Nama varchar(200) NOT NULL,
    Email varchar(200) NOT NULL UNIQUE,
    Nomor varchar(30) NOT NULL UNIQUE,
    Kelas ENUM('SD', 'SMP', 'SMA') NOT NULL,
    Jenis_kelamin ENUM('Laki-laki', 'Perempuan') NOT NULL,
-   Alamat varchar(200) NOT NULL
+   Alamat varchar(200) NOT NULL,
+   Tagihan int(20) NOT NULL
 	);
 '''
 
@@ -23,6 +25,7 @@ siswa = '''CREATE TABLE IF NOT EXISTS Siswa(
 guru ='''CREATE TABLE IF NOT EXISTS Guru(
    Id_guru int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT,
    Nama varchar(200) NOT NULL,
+   Password varchar(225) NOT NULL,
    Email varchar(200) NOT NULL UNIQUE,
    Nomor varchar(30) NOT NULL UNIQUE,
    Jenis_kelamin ENUM('Laki-laki', 'Perempuan') NOT NULL,
@@ -37,6 +40,7 @@ guru ='''CREATE TABLE IF NOT EXISTS Guru(
 pegawai = '''CREATE TABLE IF NOT EXISTS Pegawai(
    Id_pegawai int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT,
    Nama varchar(200) NOT NULL,
+   Password varchar(225) NOT NULL,
    Email varchar(200) NOT NULL UNIQUE,
    Nomor varchar(30) NOT NULL UNIQUE,
    Jenis_kelamin ENUM('Laki-laki', 'Perempuan') NOT NULL,
