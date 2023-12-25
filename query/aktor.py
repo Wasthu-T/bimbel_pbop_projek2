@@ -412,7 +412,7 @@ class Pegawai:
                     anak = int(input("Kamu memiliki berapa anak? : "))
                     ank = anak * 2/100
                     tun1 = gaji * ank
-                    tun2 = gaji * 1/100
+                    tun2 = gaji * 5/100
                     final = tun1 + tun2
                     return final      
             else :
@@ -420,15 +420,13 @@ class Pegawai:
         else :
             return 0
         
-    def gaji(self,jabatan, tunjangan) :
+    def gaji(self,jabatan) :
         if jabatan == "Manager" :
-            x = 5000000
+            gaji = 5000000
         elif jabatan == "Admin" :
-            x = 3000000
+            gaji = 3000000
         elif jabatan == "OB" :
-            x = 1000000
-
-        gaji = x + tunjangan
+            gaji = 1000000
         return gaji
 
     def insert_pegawai(self): #done
