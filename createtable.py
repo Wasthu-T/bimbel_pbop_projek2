@@ -1,6 +1,6 @@
 paket_belajar ='''CREATE TABLE IF NOT EXISTS Paket_belajar(
    Id_paket_belajar int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-   Kelas ENUM('SD', 'SMP', 'SMA') NOT NULL,
+   Kelas ENUM('4SD', '5SD','6SD','1SMP','2SMP','3SMP','1SMA IPA','2SMA IPA','3SMA IPA','1SMA IPS','2SMA IPS', '3SMA IPS') NOT NULL,
    Kategori ENUM('Reguler', 'Premium') NOT NULL,
    Biaya int(100)
     );
@@ -10,11 +10,11 @@ siswa = '''CREATE TABLE IF NOT EXISTS Siswa(
    Id_siswa int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT,
    Nama varchar(200) NOT NULL,
    Password varchar(225) NOT NULL,
+   Email varchar(200) NOT NULL UNIQUE,
    Id_paket_belajar int(10),
    FOREIGN KEY (Id_paket_belajar) REFERENCES Paket_belajar(Id_paket_belajar) ON DELETE CASCADE,
-   Email varchar(200) NOT NULL UNIQUE,
    Nomor varchar(30) NOT NULL UNIQUE,
-   Kelas ENUM('SD', 'SMP', 'SMA') NOT NULL,
+   Kelas varchar(30) NOT NULL,
    Jenis_kelamin ENUM('Laki-laki', 'Perempuan') NOT NULL,
    Alamat varchar(200) NOT NULL,
    Tagihan int(20) NOT NULL
