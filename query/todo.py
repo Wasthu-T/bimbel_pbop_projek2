@@ -7,6 +7,49 @@ import locale
 
 # set bahasa waktu lokal indonesia
 locale.setlocale(locale.LC_TIME, 'id_ID')
+class login :
+    def __init__(self, db):
+        self.db = db
+
+    def check_email(self):
+        run = True
+        while run :
+            try:
+                Email = str(input("Masukan Email\t\t: "))
+                validate_email(Email)
+                return Email
+            except EmailNotValidError as e:
+                print(str(e))
+
+    def cheking(self, tabel) :
+        os.system('cls')
+        run = True
+        while run:
+            try:
+                query = ""f"SELECT * FROM {tabel} WHERE Email = %s"""
+                data = self.check_email()
+                result = self.db.selectValue(query, (data, ))
+
+                if result and len(result) > 0:  
+                    password = result[0][2]
+
+                    inppass = str(input("masukan password : "))
+                    if inppass == password:
+                        print("Login berhasil!")
+                        print(f"Selamat datang {result[0][1]}")
+                        run = False 
+                        os.system('pause')
+                        id = result[0][0]
+                        nama = result[0][1]
+                        return id, nama
+                    else:
+                        raise ValueError("Email atau password salah")
+                else:
+                    raise ValueError("Email atau password salah")
+                    
+            except Exception as e:
+                print(e)
+
 
 class transaksi :
     def __init__(self, db):
