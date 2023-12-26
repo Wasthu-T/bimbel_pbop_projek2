@@ -19,6 +19,7 @@ class akses_Siswa(Siswa):
         self.nama = nama
     def menu(self) :
         while True :
+            os.system('cls')
             print(f"=== Selamat Datang {self.nama} ===")
             print("==[1] Absen ")
             print("==[2] Lihat Jadwal")
@@ -47,6 +48,7 @@ class akses_Siswa(Siswa):
             os.system('pause')
 
     def lihat_paket_belajar(self) :
+        os.system('cls')
         pabe.read_kategori()
         tertarik = str(input("Apakah anda tertarik (y/n) ? "))
         if tertarik.lower() == "y" :
@@ -69,6 +71,7 @@ class akses_Guru(Guru):
 
     def menu(self) :
             while True :
+                os.system('cls')
                 print(f"=== Selamat Datang {self.nama} ===")
                 print("==[1] Absen ")
                 print("==[2] Lihat Jadwal ")
@@ -91,6 +94,7 @@ class akses_Guru(Guru):
 
     def Absen_Guru(self) :
         while True :
+            os.system('cls')
             print(f"=== Selamat Datang {self.nama} ===")
             print(f"=== Menu Absen ===")
             print(f"=== [1] Izin")
@@ -116,6 +120,7 @@ class akses_Guru(Guru):
 
     def lihat_jadwal(self) :
         while True :
+            os.system('cls')
             print(f"=== Selamat Datang {self.nama} ===")
             print(f"=== Lihat Jadwal ===")
             print("==[1] Jadwal ")
@@ -139,6 +144,7 @@ class akses_Pegawai(Pegawai):
     
     def menu(self) :
         while True :
+            os.system('cls')
             print(f"=== Selamat Datang {self.nama} ===")
             print("==[1] Absen ")
             print("==[2] Cari Data")
@@ -167,6 +173,7 @@ class akses_Pegawai(Pegawai):
 
     def Absen_pegawai(self) :
         while True :
+            os.system('cls')
             print(f"=== selamat datang {self.nama} ===")
             print(f"=== Menu Absen ===")
             print(f"=== [1] Izin")
@@ -190,6 +197,7 @@ class akses_Pegawai(Pegawai):
 
     def Cari(self) :
         while True :
+            os.system('cls')
             print(f"=== Selamat Datang {self.nama} ===")
             print(f"=== Menu Cari ===")
             print("=== [1] Pegawai")
@@ -214,6 +222,7 @@ class akses_Pegawai(Pegawai):
         
     def Insert(self) :
         while True :
+            os.system('cls')
             print(f"=== Selamat Datang {self.nama} ===")
             print(f"=== Menu Tambah Data ===")
             print("===[1] Transaksi")
@@ -242,6 +251,7 @@ class akses_Pegawai(Pegawai):
 
     def ubah(self) :
         while True :
+            os.system('cls')
             print(f"=== selamat datang {self.nama} ===")
             print(f"=== Menu Ubah ===")
             print("===[1] Ubah data diri")
@@ -268,6 +278,7 @@ class akses_Pegawai(Pegawai):
 
     def delete(self) :
         while True :
+            os.system('cls')
             print(f"=== selamat datang {self.nama} ===")
             print(f"=== Menu Hapus ===")
             print("===[1] Hapus data diri")
