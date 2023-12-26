@@ -6,6 +6,11 @@ from query.todo import transaksi, jadwal, jadwal_pelayanan, ruangan, paket_belaj
 
 db = database()
 db.connect()
+tr = transaksi(db)
+ja = jadwal(db)
+jape = jadwal_pelayanan(db)
+ru = ruangan(db)
+pabe = paket_belajar(db)
 
 class akses_Siswa(Siswa):
     def __init__(self, db, id, nama):
@@ -26,7 +31,7 @@ class akses_Siswa(Siswa):
                 mur = absen_siswa(db)
                 mur.lihat_absen(self.id)
             elif pilih == 2 :
-                self.lihat_jadwal()
+                self.read_jadwal_siswa(self.id)
             elif pilih == 3 :
                 self.lihat_paket_belajar()
             elif pilih == 4 :
@@ -40,11 +45,21 @@ class akses_Siswa(Siswa):
             else :
                 print("Pilihan tidak tersedia")
             os.system('pause')
-    def lihat_jadwal(self) :
-        pass
 
     def lihat_paket_belajar(self) :
-        pass
+        pabe.read_kategori()
+        tertarik = str(input("Apakah anda tertarik (y/n) ? "))
+        if tertarik.lower() == "y" :
+            pabe.read_paket_belajar()
+            tertarik = str(input("Apakah anda ingin membeli paket belajar (y/n) ? "))
+            if tertarik.lower() == "y" :
+                Id_paket_belajar = int(input("Masukan Id Paket Belajar : "))
+                self.tambah_paket(self.id, Id_paket_belajar)
+            else :
+                self.menu()
+        else :
+            self.menu()
+
     
 class akses_Guru(Guru):
     def __init__(self, db, id, nama):
@@ -100,7 +115,21 @@ class akses_Guru(Guru):
             os.system('pause')
 
     def lihat_jadwal(self) :
-        pass
+        while True :
+            print(f"=== Selamat Datang {self.nama} ===")
+            print(f"=== Lihat Jadwal ===")
+            print("==[1] Jadwal ")
+            print("==[2] Jadwal Pelayanan")
+            pilih = int(input("Pilih menu : "))
+            if pilih == 1 :
+                self.read_jadwal_guru(self.id)
+            elif pilih == 2 :
+                self.read_jadwal_pelayanan_guru(self.id)
+            elif pilih == 0 :
+                self.menu()
+            else :
+                print("Pilihan tidak tersedia")
+            os.system('pause')
 
 class akses_Pegawai(Pegawai):
     def __init__(self, db, id, nama):
@@ -188,7 +217,7 @@ class akses_Pegawai(Pegawai):
             print(f"=== Selamat Datang {self.nama} ===")
             print(f"=== Menu Tambah Data ===")
             print("===[1] Transaksi")
-            print("===[2] Jadwal Pelajaran")
+            print("===[2] Jadwal")
             print("===[3] Jadwal Pelayanan")
             print("===[4] Ruang")
             print("===[5] Paket Belajar")
@@ -196,6 +225,14 @@ class akses_Pegawai(Pegawai):
             pilih = int(input("Pilih menu : "))
             if pilih == 1 : 
                 pass
+            elif pilih == 2 : 
+                ja.insert_jadwal()
+            elif pilih == 3 : 
+                jape.insert_jadwal_pelayanan()
+            elif pilih == 4 : 
+                ru.insert_ruangan()
+            elif pilih == 5 : 
+                pabe.insert_paket_belajar()
             elif pilih == 0 :
                 self.menu()
             else :
@@ -206,7 +243,7 @@ class akses_Pegawai(Pegawai):
     def ubah(self) :
         while True :
             print(f"=== selamat datang {self.nama} ===")
-            print(f"=== Menu Read ===")
+            print(f"=== Menu Ubah ===")
             print("===[1] Ubah data diri")
             print("===[2] Ubah data ruang")
             print("===[3] Ubah Jadwal Pelajaran")
@@ -216,6 +253,14 @@ class akses_Pegawai(Pegawai):
             pilih = int(input("Pilih menu : "))
             if pilih == 1 : 
                 self.update_pegawai(self.id)
+            elif pilih == 2 : 
+                ru.update_ruangan()
+            elif pilih == 3 : 
+                ja.update_jadwal()
+            elif pilih == 4 : 
+                jape.update_jadwal_pelayanan()
+            elif pilih == 5 : 
+                pabe.update_paket_belajar()
             elif pilih == 0 :
                 self.menu()
             else :
@@ -231,7 +276,15 @@ class akses_Pegawai(Pegawai):
             print("===[0] kembali")
             pilih = int(input("Pilih menu : "))
             if pilih == 1 : 
-                pass
+                self.delete_Pegawai(self.id)
+            elif pilih == 2 : 
+                Guru(db).read_guru()
+                id_guru = int(input("Pilih Id guru : "))
+                Guru(db).delete_guru(id_guru)
+            elif pilih == 3 : 
+                Siswa(db).read_siswa()
+                id_siswa = int(input("Pilih Id siswa : "))
+                Siswa(db).delete_siswa(id_siswa)
             elif pilih == 0 :
                 self.menu()
             else :
