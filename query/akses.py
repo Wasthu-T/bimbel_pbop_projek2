@@ -2,6 +2,7 @@ import os
 from connector import database
 from query.aktor import Siswa, Guru, Pegawai
 from query.absensi import absen_pegawai, absen_guru, absen_siswa
+from query.todo import transaksi, jadwal, jadwal_pelayanan, ruangan, paket_belajar
 
 db = database()
 db.connect()
@@ -24,14 +25,14 @@ class akses_Siswa(Siswa):
             if pilih == 1 :
                 mur = absen_siswa(db)
                 mur.lihat_absen(self.id)
-            # elif pilih == 2 :
-            #     self.Cari()
-            # elif pilih == 3 :
-            #     self.Cari()
-            # elif pilih == 4 :
-            #     self.Cari()
-            # elif pilih == 5 :
-            #     self.Cari()
+            elif pilih == 2 :
+                self.lihat_jadwal()
+            elif pilih == 3 :
+                self.lihat_paket_belajar()
+            elif pilih == 4 :
+                self.update_siswa(self.id)
+            elif pilih == 5 :
+                self.delete_siswa(self.id)
             if pilih == 0 :
                 print(f"\n\t=== Terimakasih {self.nama} ===")
                 print("=== Jangan Lupa Datang Kembali ===\n")
@@ -39,13 +40,18 @@ class akses_Siswa(Siswa):
             else :
                 print("Pilihan tidak tersedia")
             os.system('pause')
+    def lihat_jadwal(self) :
+        pass
 
+    def lihat_paket_belajar(self) :
+        pass
+    
 class akses_Guru(Guru):
     def __init__(self, db, id, nama):
         super().__init__(db)
         self.id = id
         self.nama = nama
-        
+
     def menu(self) :
             while True :
                 print(f"=== Selamat Datang {self.nama} ===")
@@ -56,14 +62,10 @@ class akses_Guru(Guru):
                 pilih = int(input("Pilih menu : "))
                 if pilih == 1 :
                     self.Absen_Guru()
-                # elif pilih == 2 :
-                #     self.Cari()
-                # elif pilih == 3 :
-                #     self.Cari()
-                # elif pilih == 4 :
-                #     self.Cari()
-                # elif pilih == 5 :
-                #     self.Cari()
+                elif pilih == 2 :
+                    self.lihat_jadwal()
+                elif pilih == 3 :
+                    self.update_guru()
                 elif pilih == 0 :
                     print(f"\n\t=== Terimakasih {self.nama} ===")
                     print("=== Jangan Lupa Datang Kembali ===\n")
@@ -96,6 +98,9 @@ class akses_Guru(Guru):
             else :
                 print("Pilihan tidak tersedia")
             os.system('pause')
+
+    def lihat_jadwal(self) :
+        pass
 
 class akses_Pegawai(Pegawai):
     def __init__(self, db, id, nama):
