@@ -19,22 +19,6 @@ class Siswa:
             except EmailNotValidError as e:
                 print(str(e))
 
-    def kelas(self) :
-        while True :
-            print("\n=== Jenjang Pendidikan ===")
-            print("1. SD")
-            print("2. SMP")
-            print("3. SMA")
-            pilih = int(input("Pilih Jenjang Pendidikan\t: "))
-            if pilih == 1 :
-                return "SD"
-            elif pilih == 2 :
-                return "SMP"
-            elif pilih == 3 :
-                return "SMA"
-            else :
-                print("pilihan tidak tersedia harap pilih yang benar")
-
     def confirm_password(self) :
         while True :
             try :
@@ -67,19 +51,18 @@ class Siswa:
         Password = self.confirm_password()
         Email = self.check_email()
         Nomor = "0" + str(int(input("Masukan Nomor\t: ")))
-        Kelas = self.kelas()
         Jenis_kelamin = self.jenis_kelamin()
         Alamat = str(input("Masukkan Alamat\t: "))
         Tagihan = 0
         x = PrettyTable()
         print("=== Data diri : ")
-        x.field_names = ["Nama", "Email", "Nomor", "Kelas", "Jenis_kelamin", "Alamat"]
-        x.add_row([Nama, Email, Nomor, Kelas, Jenis_kelamin, Alamat])
+        x.field_names = ["Nama", "Email", "Nomor", "Jenis_kelamin", "Alamat"]
+        x.add_row([Nama, Email, Nomor, Jenis_kelamin, Alamat])
         print(x)
         yakin = str(input("Yakin ingin mendaftar y/n? "))
         if (yakin == 'y') :
-            quary = """INSERT INTO pelajar(Id_paket_belajar, Nama, Password, Email, Nomor, Kelas, Jenis_kelamin, Alamat, Tagihan) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
-            data = (Id_paket_belajar, Nama, Password, Email, Nomor, Kelas, Jenis_kelamin, Alamat, Tagihan)
+            quary = """INSERT INTO Siswa(Id_paket_belajar, Nama, Password, Email, Nomor, Jenis_kelamin, Alamat, Tagihan) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"""
+            data = (Id_paket_belajar, Nama, Password, Email, Nomor, Jenis_kelamin, Alamat, Tagihan)
 
             self.db.insertValue(quary,data)
             print("=== Anda Berhasil Mendaftar Sebagai Siswa ===")
@@ -151,10 +134,25 @@ class Siswa:
         else :
             print("=== Anda Gagal Menghapus Data Siswa ===")
 
+    
     def read_siswa(self):
-        print("=== Read Siswa ===")
-        query = """SELECT * FROM siswa"""
-        self.db.selectValuepretty(query, data=None)
+        print("===== Lihat Siswa =====")
+        print("== 1. Lihat semua")
+        print("== 2. Cari bedasarkan Id Paket Belajar")
+        print("== 2. Cari bedasarkan Tagihan")
+        pilih = int(input("Pilih menu : "))
+        if pilih == 1 :
+            query = """SELECT `Id_siswa`, `Nama`, `Id_paket_belajar`, `Email`, `Nomor`, `Kelas`, `Jenis_kelamin`, `Alamat`, `Tagihan` FROM `siswa`"""
+            self.db.selectValuepretty(query, data=None)
+        elif pilih == 2 :
+            data = int(input("Masukan Id Paket Belajar : "))
+            query = """SELECT `Id_siswa`, `Nama`, `Id_paket_belajar`, `Email`, `Nomor`, `Kelas`, `Jenis_kelamin`, `Alamat`, `Tagihan` FROM `siswa` WHERE Id_paket_belajar=%s"""
+            self.db.selectValuepretty(query, (data,))
+        elif pilih == 3 :
+            query = """SELECT `Id_siswa`, `Nama`, `Id_paket_belajar`, `Email`, `Nomor`, `Kelas`, `Jenis_kelamin`, `Alamat`, `Tagihan` FROM `siswa` WHERE Tagihan > 0"""
+            self.db.selectValuepretty(query, data= None)
+        else :
+            print("Pilihan tidak tersedia")
 
 class Guru:
     def __init__(self, db):
@@ -260,7 +258,7 @@ class Guru:
             return fgaji
         else : 
             return gaji
-            
+    
     def Status_pekerja(self):
         while True :
             print("\n=== Status Pekerjaan ===")
@@ -373,10 +371,20 @@ class Guru:
             print("=== Anda Gagal Menghapus Data Guru ===")
             
     def read_guru(self):
-        print("===== Read Guru =====")
-        query = """SELECT * FROM Guru"""
-        self.db.selectValuepretty(query, data=None)
+        print("===== Lihat Guru =====")
+        print("== 1. Lihat semua")
+        print("== 2. Cari bedasarkan Bidang Mapel")
+        pilih = int(input("Pilih menu : "))
+        if pilih == 1 :
+            query = """SELECT `Id_guru`, `Nama`, `Email`, `Nomor`, `Jenis_kelamin`, `Tgl_lahir`, `Alamat`, `Status_pekerja`, `Bidang_mapel`, `Gaji` FROM `guru`"""
+            self.db.selectValuepretty(query, data=None)
+        elif pilih == 2 :
+            data = (self.bidang_mapel(), )
+            query = """SELECT `Id_guru`, `Nama`, `Password`, `Email`, `Nomor`, `Jenis_kelamin`, `Tgl_lahir`, `Alamat`, `Status_pekerja`, `Bidang_mapel`, `Gaji` FROM `guru` WHERE Bidang_mapel=%s"""
+            self.db.selectValuepretty(query, data)
 
+
+# dont know
     def read_jadwal_guru(self):
         while True:
             try:
