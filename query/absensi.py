@@ -31,19 +31,30 @@ class absen_pegawai :
             print(e)
 
     def absen_pulang(self, Id_pegawai) :
-        tanggal = datetime.now().date()
-        Jam_selesai = datetime.now().time()
-        Absen = "Hadir"
-        query = """
-            UPDATE `absen_pegawai` 
-            SET
-            `Jam_selesai` = %s,
-            `Absen` = %s 
-            WHERE `Tanggal` = %s AND `Id_pegawai` = %s
-        """
-        data = (Jam_selesai, Absen, tanggal, Id_pegawai)
-        self.db.insertValue(query, data)
-        print(f"Anda Berhasil Absen Pulang pada {tanggal}")
+        try :
+            tanggal = datetime.now().date()
+            Jam_selesai = datetime.now().time()
+            result = self.db.selectValue(query, (Id_pegawai,))
+            i = 0 
+            for i in range(len(result)) :
+                test = result[i][3]
+                if test is None :
+                    raise ValueError("Anda belum absen datang hari ini")
+            if not result :
+                raise ValueError("Anda belum absen datang hari ini")
+            Absen = "Hadir"
+            query = """
+                UPDATE `absen_pegawai` 
+                SET
+                `Jam_selesai` = %s,
+                `Absen` = %s 
+                WHERE `Tanggal` = %s AND `Id_pegawai` = %s
+            """
+            data = (Jam_selesai, Absen, tanggal, Id_pegawai)
+            self.db.insertValue(query, data)
+            print(f"Anda Berhasil Absen Pulang pada {tanggal}")
+        except Exception as e :
+            print(e)
 
     
     def absen(self) :
@@ -88,7 +99,7 @@ class absen_guru :
     def absen_datang(self, Id_guru) :
         try :
             tanggal = datetime.now().date()
-            query = """SELECT * FROM `absen_pegawai` WHERE `Id_pegawai`=%s"""
+            query = """SELECT * FROM `absen_guru` WHERE `Id_guru`=%s"""
             result = self.db.selectValue(query, (Id_guru,))
             i = 0 
             for i in range(len(result)) :
@@ -98,7 +109,7 @@ class absen_guru :
             jam_datang = datetime.now().time()
             Jam_selesai = None
             Absen = "Alpha"
-            query = """INSERT INTO `absen_pegawai`(`Id_pegawai`, `Tanggal`, `Jam_datang`, `Jam_selesai`, `Absen`) 
+            query = """INSERT INTO `absen_guru`(`Id_guru`, `Tanggal`, `Jam_datang`, `Jam_selesai`, `Absen`) 
                     VALUES 
                     (%s,%s,%s,%s,%s)"""
             data = (Id_guru, tanggal, jam_datang, Jam_selesai, Absen)
@@ -108,20 +119,33 @@ class absen_guru :
         except Exception as e :
             print(e)
 
-    def absen_pulang(self, Id_pegawai) :
-        tanggal = datetime.now().date()
-        Jam_selesai = datetime.now().time()
-        Absen = "Hadir"
-        query = """
-            UPDATE `absen_pegawai` 
-            SET
-            `Jam_selesai` = %s,
-            `Absen` = %s 
-            WHERE `Tanggal` = %s AND `Id_pegawai` = %s
-        """
-        data = (Jam_selesai, Absen, tanggal, Id_pegawai)
-        self.db.insertValue(query, data)
-        print(f"Anda Berhasil Absen Pulang pada {tanggal}")
+    def absen_pulang(self, Id_guru) :
+        try :
+            tanggal = datetime.now().date()
+            Jam_selesai = datetime.now().time()
+            query = """SELECT * FROM `absen_guru` WHERE `Id_guru`=%s"""
+            result = self.db.selectValue(query, (Id_guru,))
+            i = 0 
+            for i in range(len(result)) :
+                test = result[i][3]
+                if test is None :
+                    raise ValueError("Anda belum absen datang hari ini")
+            if not result :
+                raise ValueError("Anda belum absen datang hari ini")
+                
+            Absen = "Hadir"
+            query = """
+                UPDATE `absen_guru` 
+                SET
+                `Jam_selesai` = %s,
+                `Absen` = %s 
+                WHERE `Tanggal` = %s AND `Id_guru` = %s
+            """
+            data = (Jam_selesai, Absen, tanggal, Id_guru)
+            self.db.insertValue(query, data)
+            print(f"Anda Berhasil Absen Pulang pada {tanggal}")
+        except Exception as e :
+            print(e)
 
     def absen(self) :
         while True:
