@@ -32,7 +32,7 @@ guru ='''CREATE TABLE IF NOT EXISTS Guru(
    Tgl_lahir varchar(30) NOT NULL,
    Alamat varchar(200) NOT NULL,
    Status_pekerja ENUM('Kontrak', 'Tetap') NOT NULL,
-   Bidang_mapel ENUM('Matematika', 'Bahasa Indonesia', 'Bahasa Inggris', 'Ilmu Pengetahuan Alam', 'Biologi', 'Kimia', 'Fisika', 'Geografi', 'Ekonomi', 'Sosiologi', 'Sejarah') NOT NULL,
+   Bidang_mapel ENUM('Matematika', 'Bahasa Indonesia', 'Bahasa Inggris', 'Ilmu Pengetahuan Alam', 'Biologi', 'Kimia', 'Fisika', 'Geografi', 'Ekonomi', 'Sosiologi', 'Sejarah', 'Tes Potensi Skolastik') NOT NULL,
    Gaji varchar(100) NOT NULL
     );
 '''
@@ -107,7 +107,7 @@ jadwal = '''CREATE TABLE IF NOT EXISTS Jadwal (
    FOREIGN KEY (Id_paket_belajar) REFERENCES Paket_belajar(Id_paket_belajar) ON DELETE CASCADE,
    FOREIGN KEY (Id_guru) REFERENCES guru(Id_guru) ON DELETE CASCADE,
    Kelas ENUM('SD', 'SMP', 'SMA') NOT NULL,
-   Mapel ENUM('Matematika', 'Bahasa Indonesia', 'Bahasa Inggris', 'Ilmu Pengetahuan Alam', 'Biologi', 'Kimia', 'Fisika', 'Geografi', 'Ekonomi', 'Sosiologi', 'Sejarah') NOT NULL,
+   Mapel ENUM('Matematika', 'Bahasa Indonesia', 'Bahasa Inggris', 'Ilmu Pengetahuan Alam', 'Biologi', 'Kimia', 'Fisika', 'Geografi', 'Ekonomi', 'Sosiologi', 'Sejarah', 'Tes Potensi Skolastik') NOT NULL,
    Jam time,
    Tanggal date,
    Id_ruangan int(10) NOT NULL ,
@@ -119,7 +119,7 @@ jadwal_pelayanan = '''CREATE TABLE IF NOT EXISTS Jadwal_pelayanan (
    Id_jadwal_pelayanan int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT,
    Id_guru int(10),
    FOREIGN KEY (Id_guru) REFERENCES guru(Id_guru) ON DELETE CASCADE,
-   Mapel ENUM('Matematika', 'Bahasa Indonesia', 'Bahasa Inggris', 'Ilmu Pengetahuan Alam', 'Biologi', 'Kimia', 'Fisika', 'Geografi', 'Ekonomi', 'Sosiologi', 'Sejarah') NOT NULL,
+   Mapel ENUM('Matematika', 'Bahasa Indonesia', 'Bahasa Inggris', 'Ilmu Pengetahuan Alam', 'Biologi', 'Kimia', 'Fisika', 'Geografi', 'Ekonomi', 'Sosiologi', 'Sejarah', 'Tes Potensi Skolastik') NOT NULL,
    Jam_pelayanan time,
    Id_ruangan int(10),
    FOREIGN KEY (Id_ruangan) REFERENCES ruangan(Id_ruangan) ON DELETE CASCADE
