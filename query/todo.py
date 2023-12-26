@@ -381,7 +381,7 @@ class ruangan :
         yakin = str(input("Yakin ingin meng-input y/n? "))
         if (yakin == 'y') :
             quary = """INSERT INTO ruangan(Kondisi_ruangan, Kapasitas_kursi) VALUES (%s, %s)"""
-            data = (Kondisi_ruangan. Kapasitas_kursi)
+            data = (Kondisi_ruangan, Kapasitas_kursi)
 
             self.db.insertValue(quary,data)
             print("=== Anda Berhasil Meng-input Data Ruangan ===")
