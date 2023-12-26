@@ -27,25 +27,25 @@ paket_belajar = """INSERT INTO paket_belajar(Kategori, Kelas, Biaya) VALUES
 
 # -- Data untuk tabel Pelajar
 siswa = """INSERT INTO Siswa(Id_paket_belajar, Nama, Password, Email, Nomor, Kelas, Jenis_kelamin, Alamat, Tagihan) VALUES 
-('2', 'Gilang Pratama', 'gilang123', Gilang12@gmail.com, 082456789345, 5SD, Laki-laki, Sendangadi, 280000),
-('4', 'Talita Azahra', 'talita123', Alita13@gmail.com, 082456757665, 1SMP, Perempuan, Sinduadi, 430000),
-('9', 'Salsabila Maheswari', 'salsa123', Abila14@gmail.com, 082435879554, 3SMA IPA, Perempuan, Tlogoadi, 480000),
-('10', 'Amanda Rizky', 'amanda123', Amanda15@gmail.com, 082421776890, 1SMA IPS, Perempuan, Tirtoadi, 480000),
-('15', 'Keano Aditama', 'keano123', Ken116@gmail.com, 082543678976, 6SD, Laki-laki, Godean, 450000),
-('18', 'Abimanyu', 'abi123', Abim117@gmail.com, 082431568967, 3SMP, Laki-laki, Condongcatur, 717500),
-('20', 'Adelia Putri', 'adelia123', Delia118@gmail.com, 082678546789, 2SMA IPA, Perempuan, Gamping, 900000),
-('24', 'Dimas Anggara', 'dimas123', Dimas119@gmail.com, 082677856754, 3SMA IPS, Laki-laki, Kronggahan, 900000);"""
+('2', 'Gilang Pratama', 'gilang123', 'Gilang12@gmail.com', '082456789345', '5SD', 'Laki-laki', 'Sendangadi', '280000'),
+('4', 'Talita Azahra', 'talita123', 'Alita13@gmail.com', '082456757665', '1SMP', 'Perempuan', 'Sinduadi', '430000'),
+('9', 'Salsabila Maheswari', 'salsa123', 'Abila14@gmail.com', '082435879554', '3SMA IPA', 'Perempuan', 'Tlogoadi', '480000'),
+('10', 'Amanda Rizky', 'amanda123', 'Amanda15@gmail.com', '082421776890', '1SMA IPS', 'Perempuan', 'Tirtoadi', '480000'),
+('15', 'Keano Aditama', 'keano123', 'Ken116@gmail.com', '082543678976', '6SD', 'Laki-laki', 'Godean', '450000'),
+('18', 'Abimanyu', 'abi123', 'Abim117@gmail.com', '082431568967', '3SMP', 'Laki-laki', 'Condongcatur', '717500'),
+('20', 'Adelia Putri', 'adelia123', 'Delia118@gmail.com', '082678546789', '2SMA IPA', 'Perempuan', 'Gamping', '900000'),
+('24', 'Dimas Anggara', 'dimas123', 'Dimas119@gmail.com', '082677856754', '3SMA IPS', 'Laki-laki', 'Kronggahan', '900000');"""
 
 # -- Data untuk tabel Pengajar
 guru = """INSERT INTO Guru(Nama, Email, Password, Nomor, Jenis_kelamin, Tgl_lahir, Alamat, Status_pekerja, Bidang_mapel, Gaji) VALUES 
-('Ratna Setyowati', 'Ratna11@gmail.com, 'ratna123', 083456789123, 'Perempuan', 1997-10-21, 'Sleman', 'Tetap', 'Bahasa Indonesia', '870000'),
-('Agung Suryadi', 'Agung12@gmail.com, 'agung123', 083456787542, 'Laki-laki', 1996-08-13, 'Gamping', 'Tetap', 'Bahasa Inggris', '870000'),
-('Muryani', 'Muryani13@gmail.com, 'muryani123', 083678543667, 'Perempuan', 1995-05-25, 'Cebongan', 'Tetap', 'Ilmu Pengetahuan Alam', '870000'),
-('Selfi Artika', 'Selfi14@gmail.com, 'selfi123', 083765342889, 'Perempuan', 1997-11-07, 'Maguwoharjo', 'Tetap', 'Matematika', '840000'),
-('Muryanto', 'Muryanto15@gmail.com, 'yanto123', 083986734521, 'Laki-laki', 1994-08-17, 'Bantul', 'Tetap', 'Tes Potensi Skolastik', '720000'),
-('Anita Kusumawati', 'Anita16@gmail.com, 'anita123', 083654897345, 'Perempuan', 1996-04-27, 'Condongcatur', 'Kontrak', 'Biologi', '510000'),
-('Oryza Putri', 'Oryza17@gmail.com, 'oryza123', 083654893256, 'Perempuan', 1994-10-01, 'Kaliurang', 'Kontrak', 'Fisika', '750000'),
-('Aryanto Syaifullah', 'Aryanto18@gmail.com, 'aryan123', 083654789334, 'Laki-laki', 1995-02-17, 'Monjali', 'TKontrak', 'Ekonomi', '510000');"""
+('Ratna Setyowati', 'Ratna11@gmail.com', 'ratna123', '083456789123', 'Perempuan', '1997-10-21', 'Sleman', 'Tetap', 'Bahasa Indonesia', '870000'),
+('Agung Suryadi', 'Agung12@gmail.com', 'agung123', '083456787542', 'Laki-laki', '1996-08-13', 'Gamping', 'Tetap', 'Bahasa Inggris', '870000'),
+('Muryani', 'Muryani13@gmail.com', 'muryani123', '083678543667', 'Perempuan', '1995-05-25', 'Cebongan', 'Tetap', 'Ilmu Pengetahuan Alam', '870000'),
+('Selfi Artika', 'Selfi14@gmail.com', 'selfi123', '083765342889', 'Perempuan', '1997-11-07', 'Maguwoharjo', 'Tetap', 'Matematika', '840000'),
+('Muryanto', 'Muryanto15@gmail.com', 'yanto123', '083986734521', 'Laki-laki', '1994-08-17', 'Bantul', 'Tetap', 'Tes Potensi Skolastik', '720000'),
+('Anita Kusumawati', 'Anita16@gmail.com', 'anita123', '083654897345', 'Perempuan', '1996-04-27', 'Condongcatur', 'Kontrak', 'Biologi', '510000'),
+('Oryza Putri', 'Oryza17@gmail.com', 'oryza123', '083654893256', 'Perempuan', '1994-10-01', 'Kaliurang', 'Kontrak', 'Fisika', '750000'),
+('Aryanto Syaifullah', 'Aryanto18@gmail.com', 'aryan123', '083654789334', 'Laki-laki', '1995-02-17', 'Monjali', 'Kontrak', 'Ekonomi', '510000');"""
 
 # -- Data untuk tabel Admin
 pegawai = """INSERT INTO Pegawai(Nama, Password, Email, Nomor, Jenis_kelamin, Tgl_lahir, Alamat, Status_pekerja, Jabatan, Tunjangan, Gaji) VALUES 
