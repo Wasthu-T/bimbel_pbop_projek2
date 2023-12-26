@@ -12,7 +12,7 @@ class absen_pegawai :
         try :
             tanggal = datetime.now().date()
             query = """SELECT * FROM `absen_pegawai` WHERE `Id_pegawai`=%s"""
-            result = self.db.selectValueF(query, (Id_pegawai,))
+            result = self.db.selectValue(query, (Id_pegawai,))
             i = 0 
             for i in range(len(result)) :
                 test = result[i][2]
@@ -63,7 +63,7 @@ class absen_pegawai :
         try :
             tanggal = datetime.now().date()
             query = """SELECT * FROM `absen_pegawai` WHERE `Id_pegawai`=%s"""
-            result = self.db.selectValueF(query, (Id_pegawai,))
+            result = self.db.selectValue(query, (Id_pegawai,))
             i = 0 
             for i in range(len(result)) :
                 test = result[i][2]
@@ -89,7 +89,7 @@ class absen_guru :
         try :
             tanggal = datetime.now().date()
             query = """SELECT * FROM `absen_pegawai` WHERE `Id_pegawai`=%s"""
-            result = self.db.selectValueF(query, (Id_guru,))
+            result = self.db.selectValue(query, (Id_guru,))
             i = 0 
             for i in range(len(result)) :
                 test = result[i][2]
@@ -140,7 +140,7 @@ class absen_guru :
         try :
             tanggal = datetime.now().date()
             query = """SELECT * FROM `absen_pegawai` WHERE `Id_pegawai`=%s"""
-            result = self.db.selectValueF(query, (Id_pegawai,))
+            result = self.db.selectValue(query, (Id_pegawai,))
             i = 0 
             for i in range(len(result)) :
                 test = result[i][2]
@@ -184,7 +184,7 @@ class absen_guru :
                 id_siswa = int(input("Id siswa : "))
                 id_jadwal = int(input("Id jadwal : "))
                 query = """SELECT * FROM `absen_siswa` WHERE `Id_jadwal`=%s"""
-                result = self.db.selectValueF(query, (Id_guru,))
+                result = self.db.selectValue(query, (Id_guru,))
                 i = 0 
                 absen = self.absen_s()
                 for i in range(len(result)) :
