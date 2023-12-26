@@ -1,7 +1,5 @@
 import os 
 from connector import database
-from createtable import created_table
-from sampledata import created_data
 from query.aktor import Siswa, Guru, Pegawai
 from query.absensi import absen_pegawai, absen_guru, absen_siswa
 
