@@ -103,12 +103,15 @@ ruangan ='''CREATE TABLE IF NOT EXISTS Ruangan(
 jadwal = '''CREATE TABLE IF NOT EXISTS Jadwal (
    Id_jadwal int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT,
    Id_guru int(10),
+   Id_paket_belajar int(10),
+   FOREIGN KEY (Id_paket_belajar) REFERENCES Paket_belajar(Id_paket_belajar) ON DELETE CASCADE,
    FOREIGN KEY (Id_guru) REFERENCES guru(Id_guru) ON DELETE CASCADE,
    Kelas ENUM('SD', 'SMP', 'SMA') NOT NULL,
    Mapel ENUM('Matematika', 'Bahasa Indonesia', 'Bahasa Inggris', 'Ilmu Pengetahuan Alam', 'Biologi', 'Kimia', 'Fisika', 'Geografi', 'Ekonomi', 'Sosiologi', 'Sejarah') NOT NULL,
    Jam time,
    Tanggal date,
-   Id_ruangan int(10) NOT NULL,
+   Id_ruangan int(10) NOT NULL ,
+   FOREIGN KEY (Id_ruangan) REFERENCES Ruangan(Id_ruangan) ON DELETE CASCADE,
    Paket_belajar ENUM('Reguler', 'Premium') NOT NULL
     );
 '''
@@ -138,13 +141,13 @@ absen_siswa = '''CREATE TABLE IF NOT EXISTS Absen_siswa (
 def created_table(db) :
     db.create(paket_belajar)
     db.create(siswa)
-    db.create(guru)
+    db.create(guru) 
     db.create(pegawai)
     db.create(absen_pegawai)
-    db.create(transaksi)
-    db.create(jadwal)
-    db.create(ruangan)
-    db.create(absen_siswa)
-    db.create(absen_guru)
+    db.create(transaksi) 
+    db.create(ruangan) 
+    db.create(absen_guru) 
     db.create(jadwal_pelayanan)
+    db.create(jadwal)
+    db.create(absen_siswa) 
     print("Tabel berhasil dibuat")
