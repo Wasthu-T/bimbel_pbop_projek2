@@ -459,11 +459,30 @@ class paket_belajar :
             print("3. SMA")
             pilih = int(input("Pilih Jenjang Pendidikan\t: "))
             if pilih == 1 :
-                return "SD"
+                kelas = int(input("Kelas berapa? (4/5/6) :"))
+                if kelas in [4,5,6] :
+                    xkel = str(kelas)+"SD"
+                    return xkel
+                else : 
+                    print("Pilihan tidak tersedia")
             elif pilih == 2 :
-                return "SMP"
+                kelas = int(input("Kelas berapa? (1/2/3) :"))
+                if kelas in [1,2,3] :
+                    xkel = str(kelas)+"SMP"
+                    return xkel
+                else : 
+                    print("Pilihan tidak tersedia")
             elif pilih == 3 :
-                return "SMA"
+                kelas = int(input("Kelas berapa? (1/2/3) :"))
+                if kelas in [1,2,3] :
+                    jurusan = str(input("Jurusan apa? (IPA/IPS) :"))
+                    if jurusan.upper() in ["IPA","IPS"] :
+                        xkel = str(kelas)+"SMA "+ jurusan.upper()
+                        return xkel
+                    else : 
+                        print("Pilihan tidak tersedia")
+                else : 
+                    print("Pilihan tidak tersedia")
             else :
                 print("pilihan tidak tersedia harap pilih yang benar")
 
@@ -559,6 +578,48 @@ class paket_belajar :
             print("=== Anda Gagal Menghapus Data Paket Belajar ===")
 
     def read_paket_belajar(self):
-        print("=== Read Paket Belajar ===")
-        query = """SELECT * FROM paket_belajar"""
-        self.db.selectValuepretty(query, data=None)
+        print("=== Lihat Paket Belajar ===")
+        print("1. Lihat Bedasarkan Kelas")
+        print("2. Lihat Bedasarkan Kategori")
+        print("3. Lihat Semua")
+        pilih = int(input("Pilih menu : "))
+        if pilih == 1 :
+            query = """SELECT * FROM `paket_belajar` WHERE `Kelas`=%s"""
+            data = self.kelas()
+            self.db.selectValuepretty(query, (data, ))
+
+        elif pilih == 2 :
+            query = """SELECT * FROM `paket_belajar` WHERE `Kategori`=%s"""
+            data = self.kategori()
+            self.db.selectValuepretty(query, (data, ))
+
+        elif pilih == 3 :
+            query = """SELECT * FROM paket_belajar"""
+            self.db.selectValuepretty(query, data=None)
+        else : 
+            print("Pilihan tidak tersedia")
+
+    def read_kategori(self) :
+        print("=== Lihat Paket Belajar ===")
+        paket = self.kategori()
+        x = PrettyTable()
+        if paket == "Premium" :
+            x.field_names = ["Fasilitas", "Premium"]
+            x.add_row(["Pertemuan", "6x seminggu"])
+            x.add_row(["TO", "24x Online (Sesuaikan jam siswa)"])
+            x.add_row(["Modul", "Digital & Cetak"])   
+            x.add_row(["Sharing Soal", "Ya"])   
+            x.add_row(["Kelas Pengembangan diri Online", "Ya"])   
+            x.add_row(["Wifi", "Ya"])   
+            print(x)
+        elif paket == "Reguler" :
+            x.field_names = ["Fasilitas", "Reguler"]
+            x.add_row(["Pertemuan", "4x seminggu"])
+            x.add_row(["TO", "12x Online (Sesuaikan jam siswa)"])
+            x.add_row(["Modul", "Digital"])   
+            x.add_row(["Sharing Soal", "Ya"])   
+            x.add_row(["Kelas Pengembangan diri Online", "Tidak"])   
+            x.add_row(["Wifi", "Ya"])   
+            print(x)
+        else :
+            print("Pilihan tidak tersedia")
