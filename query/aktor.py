@@ -260,7 +260,20 @@ class Guru:
             return fgaji
         else : 
             return gaji
-    
+            
+    def Status_pekerja(self):
+        while True :
+            print("\n=== Status Pekerjaan ===")
+            print("1. Tetap")
+            print("2. Kontrak")
+            pilih = int(input("Pilih status : "))
+            if pilih == 1 :
+                return "Tetap"
+            elif pilih == 2 :
+                return "Kontrak"
+            else :
+                print("Pilihan tidak tersedia")
+
     def instert_guru(self):
         print("===== Input Data Guru =====")
         Nama = str(input("Masukan Nama\t: "))
@@ -270,7 +283,7 @@ class Guru:
         Jenis_kelamin = self.jenis_kelamin()
         Tgl_lahir = self.inp_tanggal()
         Alamat = str(input("Masukan Alamat\t: "))
-        Status_pekerja = str(input("Masukkan Status Pekerja (Kontrak/Tetap)\t: "))
+        Status_pekerja = self.Status_pekerja()
         Bidang_mapel = self.bidang_mapel()
         Gaji = self.gaji()
         # Gaji = 0 
@@ -283,7 +296,7 @@ class Guru:
         
         yakin = str(input("Yakin ingin menambah data guru y/n? "))
         if yakin == 'y':
-            query = """INSERT INTO Guru(Nama, Email,Password, Nomor, Jenis_kelamin, Tgl_lahir, Alamat, Status_pekerja, Bidang_mapel, Gaji) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+            query = """INSERT INTO Guru(Nama, Email,Password, Nomor, Jenis_kelamin, Tgl_lahir, Alamat, Status_pekerja, Bidang_mapel, Gaji) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s,%s)"""
             data = (Nama, Email, Password, Nomor, Jenis_kelamin, Tgl_lahir, Alamat, Status_pekerja, Bidang_mapel, Gaji)
             self.db.insertValue(query, data)
             print("=== Anda Berhasil Menambahkan Data Guru ===")
