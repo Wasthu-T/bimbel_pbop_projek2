@@ -4,7 +4,7 @@ from createtable import created_table
 from sampledata import created_data
 from query.aktor import Siswa, Guru, Pegawai
 from query.todo import login
-from query.akses import akses_Pegawai
+from query.akses import akses_Pegawai,akses_Siswa,akses_Guru
 
 db = database()
 db.connect()
@@ -26,67 +26,39 @@ while True :
     print("======================")
     pilih = int(input("Pilih Menu : "))
     if pilih == 1 :
-        print("\n\t===== Menu Siswa =====")
+        print("\n\t====== Menu Siswa ======")
         print("\t===[1] Registrasi      ==")
         print("\t===[2] Login           ==")
         print("\t=========================")
-
         pilih = int(input("Pilih Menu : "))
         if pilih == 1 :
-            print("\n\t==== Menu Registrasi ====")
-            print("\t===[1] Pelajar         ==")
-            print("\t===[2] Pengajar        ==")
-            print("\t=========================")
-
-            pilih = int(input("Pilih Menu : "))
-            if pilih == 1:
-                pass
-            elif pilih == 2:
-                pass
-            else :
-                print("=== Pilihan tidak tersedia ===")
-                print("=== Kembali ke menu utama ===")
-
+            gur = Siswa(db)
+            gur.insert_siswa()
         elif pilih == 2 :
-            print("\n\t====== Menu  Login ======")
-            print("\t===[1] Pelajar         ==")
-            print("\t===[2] Pengajar        ==")
-            print("\t=========================")
-
-            pilih = int(input("Pilih Menu : "))
-            if pilih == 1:
-                pass
-            elif pilih == 2:
-                pass
-            else :
-                print("=== Pilihan tidak tersedia ===")
-                print("=== Kembali ke menu utama ===")
-
-        else :
-            print("=== Pilihan tidak tersedia ===")
-            print("=== Kembali ke menu utama ===")
+            id = login(db)
+            get_id_name = id.cheking("siswa")
+            id, nama = get_id_name
+            my = akses_Siswa(db,id,nama)
+            my.menu()
 
     elif pilih == 2 :
-        print("\n\t====== Menu  Admin ======")
+        print("\n\t====== Menu Guru ======")
         print("\t===[1] Registrasi      ==")
         print("\t===[2] Login           ==")
         print("\t=========================")
 
         pilih = int(input("Pilih Menu : "))
         if pilih == 1 :
-            print("\n\t==== Menu Registrasi ====")
-            print("\t===[1] Admin           ==")
-            print("\t=========================")
-
-            pilih = int(input("Pilih Menu : "))
-
+            gur = Guru(db)
+            gur.instert_guru()
         elif pilih == 2 :
-           print("\n\t====== Menu  Login ======")
-           print("\t===[1] Admin           ==")
-           print("\t=========================")
+            id = login(db)
+            get_id_name = id.cheking("guru")
+            id, nama = get_id_name
+            my = akses_Guru(db,id,nama)
+            my.menu()
 
-           pilih = int(input("Pilih Menu : "))
-
+            
         else :
             print("=== Pilihan tidak tersedia ===")
             print("=== Kembali ke menu utama ===")
