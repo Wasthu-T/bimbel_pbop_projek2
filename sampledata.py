@@ -63,9 +63,9 @@ ruangan = """INSERT INTO ruangan(Kondisi_ruangan, Kapasitas_kursi) VALUES
 
 # -- Data untuk tabel Jadwal
 jadwal = """INSERT INTO jadwal(Id_guru, Id_paket_belajar , Kelas, Mapel, Jam_mulai,Jam_selesai, Tanggal, Id_ruangan, Paket_belajar) VALUES 
-            ('1', '6','3SMP', 'Bahasa Indonesia', '16:30:00, 18:00:00', '2023-12-26', '1', 'Reguler'),
-            ('4', '5','2SMP', 'Matematika', '19:00:00, 20:30:00, '2023-12-26', '4', 'Reguler'),
-            ('5',  '11','2SMA IPS','Tes Potensi Skolastik', '16:30:00, 18:00:00', '2023-12-26', '3', 'Reguler');"""
+            ('1', '6','3SMP', 'Bahasa Indonesia', '16:30:00', '18:00:00', '2023-12-26', '1', 'Reguler'),
+            ('4', '5','2SMP', 'Matematika', '19:00:00', '20:30:00', '2023-12-26', '4', 'Reguler'),
+            ('5',  '11','2SMA IPS','Tes Potensi Skolastik', '16:30:00', '18:00:00', '2023-12-26', '3', 'Reguler');"""
 
 def created_data(db) :
     db.create(paket_belajar)
