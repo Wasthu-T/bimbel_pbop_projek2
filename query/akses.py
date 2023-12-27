@@ -137,10 +137,11 @@ class akses_Guru(Guru):
             os.system('pause')
 
 class akses_Pegawai(Pegawai):
-    def __init__(self, db, id, nama):
+    def __init__(self, db, id, nama, jabatan):
         super().__init__(db)
         self.id = id
         self.nama = nama
+        self.jabatan = jabatan
         
     def menu(self) :
         while True :
