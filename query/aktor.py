@@ -523,13 +523,15 @@ class Pegawai:
 
     def Tunjangan(self, status, gaji) :
         if status == "Tetap" :
-            istri = str(input("Apa kamu sudah berkeluarga? (y/n) "))
+            istri = str(input("Apa kamu memiliki istri? (y/n) "))
             if istri.lower() == "y" :
                 while True :
+                    tun2 = gaji * 5/100
                     anak = int(input("Kamu memiliki berapa anak? : "))
+                    if anak == 0 :
+                        return tun2
                     ank = anak * 2/100
                     tun1 = gaji * ank
-                    tun2 = gaji * 5/100
                     final = tun1 + tun2
                     return final      
             else :
@@ -540,11 +542,13 @@ class Pegawai:
     def gaji(self,jabatan) :
         if jabatan == "Manager" :
             gaji = 5000000
+            return gaji
         elif jabatan == "Admin" :
             gaji = 3000000
+            return gaji
         elif jabatan == "OB" :
             gaji = 1000000
-        return gaji
+            return gaji
 
     def insert_pegawai(self): #done
         print("===== Input Pegawai =====")
@@ -579,16 +583,17 @@ class Pegawai:
             print("=== Anda Gagal Mendaftar Sebagai Pegawai ===")
 
 
-    def edit_pegawai(self, result, Id_pegawai) : #done
-        Nama = result[0][1]
-        Password = result[0][2]
-        Email = result[0][3]
-        Nomor = result[0][4]
-        Alamat = result[0][7]
-        Status_pekerja = result[0][8]
-        Jabatan = result[0][9]
-        Tunjangan = result[0][10]
+        def edit_pegawai(self, result, Id_pegawai) : #done
         while True : 
+            Nama = result[0][1]
+            Password = result[0][2]
+            Email = result[0][3]
+            Nomor = result[0][4]
+            Alamat = result[0][7]
+            Status_pekerja = result[0][8]
+            Jabatan = result[0][9]
+            Tunjangan = result[0][10]
+            gaji = self.gaji(Jabatan)
             print("=== Edit value ===")
             print("1. Nama")
             print("2. Password")
@@ -601,51 +606,64 @@ class Pegawai:
             pilih = int(input("Data yang ingin diubah : "))
             if pilih == 1 :
                 Nama = str(input("Masukan Nama\t: "))
+                query = """UPDATE `pegawai` SET `Nama`=%s WHERE `Id_pegawai`=%s"""
+                data = Nama, Id_pegawai
+                self.db.insertValue(query, data)
             elif pilih == 2 :
                 Password = self.confirm_password()
+                query = """UPDATE `pegawai` SET `Password`=%s WHERE `Id_pegawai`=%s"""
+                data = Password, Id_pegawai
+                self.db.insertValue(query,data)
             elif pilih == 3 :
                 Email = self.check_email()
+                query = """UPDATE `pegawai` SET `Email`=%s WHERE `Id_pegawai`=%s"""
+                data = Email, Id_pegawai
+                self.db.insertValue(query, data)
             elif pilih == 4 :
                 Nomor = "0" + str(int(input("Masukan Nomor\t: ")))
+                query = """UPDATE `pegawai` SET `Nomor`=%s WHERE `Id_pegawai`=%s"""
+                data = Nomor, Id_pegawai
+                self.db.insertValue(query, data)
             elif pilih == 5 :
                 Alamat = str(input("Masukan alamat\t:"))
+                query = """UPDATE `pegawai` SET `Alamat`=%s WHERE `Id_pegawai`=%s"""
+                data = Alamat, Id_pegawai
+                self.db.insertValue(query, data)
             elif pilih == 6 :
                 Status_pekerja = self.Status_pekerja()
+                query = """UPDATE `pegawai` SET `Status_pekerja`=%s WHERE `Id_pegawai`=%s"""
+                data = Status_pekerja, Id_pegawai
+                self.db.insertValue(query, data)
             elif pilih == 7 :
                 Jabatan = self.Jabatan()
+                query = """UPDATE `pegawai` SET `Jabatan`=%s WHERE `Id_pegawai`=%s"""
+                data = Jabatan, Id_pegawai
+                self.db.insertValue(query, data)
             elif pilih == 8 : 
-                Tunjangan = self.Tunjangan(Status_pekerja)
+                Tunjangan = self.Tunjangan(Status_pekerja,gaji)
+                query = """UPDATE `pegawai` SET `Tunjangan`=%s WHERE `Id_pegawai`=%s"""
+                data = Tunjangan, Id_pegawai
+                self.db.insertValue(query, data)
 
             else : 
                 print("Pilihan tidak tersedia")
+                
             lanjut = str(input("Ganti data lain (y/n)? "))
             if lanjut == 'y' :
                 continue
             else :
                 break
 
-        gaji = self.gaji(Jabatan,Tunjangan)
-        query = """UPDATE `pegawai` SET 
-        `Nama`=%s,
-        `Password`=%s,
-        `Email`=%s,
-        `Nomor`=%s,
-        `Alamat`=%s,
-        `Status_pekerja`=%s,
-        `Jabatan`=%s,
-        `Tunjangan`=%s,
-        `Gaji`=%s 
-        WHERE `Id_pegawai`='%s'"""
-        data = (Nama, Password,Email, Nomor, Alamat,Status_pekerja,Jabatan,Tunjangan,gaji,Id_pegawai)
-        self.db.insertValue(query, data)
-
-    def update_pegawai(self, Id_pegawai): #done not yet testing
+    def update_pegawai(self, Id_pegawai):
         print("===== Update pegawai =====")
-        # Id_admin = int(input("Masukkan ID Admin yang akan diupdate: "))
-        query = """SELECT `Id_pegawai`, `Nama`, `Email`, `Nomor`, `Jenis_kelamin`, `Tgl_lahir`, `Alamat`, `Status_pekerja`, `Jabatan`, `Tunjangan`, `Gaji` FROM pegawai WHERE Id_pegawai = %s"""
+        query = """SELECT * FROM pegawai WHERE Id_pegawai = %s"""
         data = (Id_pegawai,)
-        self.db.selectValuepretty(query, data)
         result = self.db.selectValue(query, data)
+        data_field = ["id_pegawai","Nama","Password","Email","Nomor","jenis_kelamin","tgl","Alamat","Status_pekerja","Jabatan","Tunjangan","gaji"]
+        table = PrettyTable(header=False)
+        for data,value in zip(data_field, result[0]) :
+            table.add_row([data,value])
+        print(table)
 
 
         test = str(input("Apa data ingin diupdate (y/n)? "))
@@ -654,7 +672,6 @@ class Pegawai:
             print("=== Anda Berhasil Meng-update Data Admin ===")
         else :
             print("=== Anda Gagal Meng-update Data Admin ===")
-
 
     def delete_Pegawai(self, Id_pegawai):#done
         print("===== Delete Pegawai =====")
