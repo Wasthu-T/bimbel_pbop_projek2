@@ -743,8 +743,8 @@ class paket_belajar :
             print("=== Anda Gagal Meng-input Data Paket Belajar===")
 
     def edit_paket_belajar(self, result, Id_paket_belajar) :
-        Kategori = result[0][1]
-        Kelas = result[0][2]
+        Kelas = result[0][1]
+        Kategori = result[0][2]
         Biaya = result[0][3]
         while True :
             print("=== Edit Value ===")
@@ -754,10 +754,20 @@ class paket_belajar :
             pilih = int(input("Data yang ingin diubah : "))
             if pilih == 1:
                 Kategori = self.kategori()
+                query = """UPDATE paket_belajar SET `Kategori`= %s WHERE `Id_paket_belajar` = %s"""
+                data = (Kategori, Id_paket_belajar)
+                self.db.insertValue(query, data)
+
             elif pilih == 2:
                 Kelas = self.kelas()
+                query = """UPDATE paket_belajar SET `Kelas`= %s WHERE `Id_paket_belajar` = %s"""
+                data = (Kelas, Id_paket_belajar)
+                self.db.insertValue(query, data)
             elif pilih == 3:
                 Biaya = int(input("Masukan Biaya Paket Belajar\t:"))
+                query = """UPDATE paket_belajar SET `Biaya`= %s WHERE `Id_paket_belajar` = %s"""
+                data = (Biaya, Id_paket_belajar)
+                self.db.insertValue(query, data)
             else : 
                 print("Pilihan tidak tersedia")
             lanjut = str(input("Ganti data lain (y/n)? "))
@@ -765,12 +775,10 @@ class paket_belajar :
                 continue
             else :
                 break
-        query = """UPDATE paket_belajar SET `Kategori`= %s, `Kelas`= %s , `Biaya`= %s WHERE `Id_paket_belajar` = %s"""
-        data = (Kategori, Kelas, Biaya, Id_paket_belajar)
-        self.db.insertValue(query, data)
 
     def update_paket_belajar(self):
         print("=== Update Paket Belajar ===")
+        self.read_paket_belajar()
         Id_paket_belajar = int(input("Masukkan ID Paket Belajar yang akan diupdate: "))
         query = """SELECT * FROM paket_belajar WHERE Id_paket_belajar = %s"""
         data = (Id_paket_belajar,)
@@ -787,6 +795,7 @@ class paket_belajar :
 
     def delete_paket_belajar(self):
         print("=== Delete Paket Belajar ===")
+        self.read_paket_belajar()
         Id_paket_belajar = int(input("Masukkan ID Paket Belajar yang akan dihapus: "))
         query = """SELECT * FROM paket_belajar WHERE Id_paket_belajar = %s"""
         data = (Id_paket_belajar,)
@@ -800,6 +809,7 @@ class paket_belajar :
             
         else :
             print("=== Anda Gagal Menghapus Data Paket Belajar ===")
+
 
     def read_paket_belajar(self):
         print("=== Lihat Paket Belajar ===")
