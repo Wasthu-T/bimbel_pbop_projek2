@@ -104,21 +104,40 @@ class jadwal :
     def __init__(self, db):
         self.db = db
     
-    def kelas(self):
-        while True:
-            print("\n=== Kelas ===")
+   def kelas(self) :
+        while True :
+            print("\n=== Jenjang Pendidikan ===")
             print("1. SD")
             print("2. SMP")
             print("3. SMA")
-            pilih = int(input("Pilih Kelas\t: "))
-            if pilih == 1:
-                return "SD"
-            elif pilih == 2:
-                return "SMP"
-            elif pilih == 3:
-                return "SMA"
-            else:
-                print("Pilihan tidak tersedia. Harap pilih yang benar.")     
+            pilih = int(input("Pilih Jenjang Pendidikan\t: "))
+            if pilih == 1 :
+                kelas = int(input("Kelas berapa? (4/5/6) :"))
+                if kelas in [4,5,6] :
+                    xkel = str(kelas)+"SD"
+                    return xkel
+                else : 
+                    print("Pilihan tidak tersedia")
+            elif pilih == 2 :
+                kelas = int(input("Kelas berapa? (1/2/3) :"))
+                if kelas in [1,2,3] :
+                    xkel = str(kelas)+"SMP"
+                    return xkel
+                else : 
+                    print("Pilihan tidak tersedia")
+            elif pilih == 3 :
+                kelas = int(input("Kelas berapa? (1/2/3) :"))
+                if kelas in [1,2,3] :
+                    jurusan = str(input("Jurusan apa? (IPA/IPS) :"))
+                    if jurusan.upper() in ["IPA","IPS"] :
+                        xkel = str(kelas)+"SMA "+ jurusan.upper()
+                        return xkel
+                    else : 
+                        print("Pilihan tidak tersedia")
+                else : 
+                    print("Pilihan tidak tersedia")
+            else :
+                print("pilihan tidak tersedia harap pilih yang benar")
                 
     def mapel(self):
         while True:
@@ -135,116 +154,187 @@ class jadwal :
                 return mapel[opsi - 1]
             else:
                 print("Pilihan tidak tersedia")
-                
-    def insert_jadwal(self):
-        print("===== Input Jadwal =====")
-        Id_guru = int(input("Masukkan ID Guru\t: "))
-        Kelas = self.kelas()
-        Mapel = self.mapel()
-        Jam = input("Masukkan Jam (HH:MM:SS)\t: ") 
-        Tanggal_str = input("Masukkan Tanggal (format: YYYY-MM-DD)\t: ")
-        Tanggal = datetime.strptime(Tanggal_str, "%Y-%m-%d").date()
-        Id_ruangan = int(input("Masukkan ID Ruangan\t: "))
-        Paket_belajar = input("Masukkan Jenis Paket Belajar (Reguler/Premium)\t: ").capitalize()
 
-        confirm = input("Apakah anda ingin melanjutkan tindakan ini (y/n): ")
+    def check_jam(self) :
+        try:
+            jam_mulai = input("Mulai Jam (HH:MM:SS): ")
+            waktu_mulai = datetime.strptime(jam_mulai, "%H:%M:%S")
+            waktu_mulai_jadwal = datetime.strptime("15:00:00", "%H:%M:%S")
+            if waktu_mulai < waktu_mulai_jadwal:
+                raise ValueError(f"Waktu jam kerja 15:00:00")
+            
+            jam_selesai = input("Selesai Jam (HH:MM:SS): ")
+            waktu_selesai = datetime.strptime(jam_selesai, "%H:%M:%S")
+            waktu_selesai_jadwal = datetime.strptime("21:00:00", "%H:%M:%S")
+            if waktu_selesai > waktu_selesai_jadwal:
+                raise ValueError(f"Waktu selesai kerja 21:00:00")
+            
+            durasi_maksimal = timedelta(hours=1, minutes=30)
+            batas_waktu = waktu_mulai + durasi_maksimal
+
+            if waktu_selesai > batas_waktu:
+                raise ValueError("Durasi pembelajaran tidak boleh lebih dari 1 jam 30 menit")
+
+            return waktu_mulai,waktu_selesai           
+        except Exception as e:
+            print(e)
         
-        if confirm == 'y':
-            query = """INSERT INTO jadwal(Id_guru, Kelas, Mapel, Jam, Tanggal, Id_ruangan, Paket_belajar) 
-                    VALUES (%s, %s, %s, %s, %s, %s, %s)"""
-            data = (Id_guru, Kelas, Mapel, Jam, Tanggal, Id_ruangan, Paket_belajar)
+    def get_data_paket(self, result) :
+        kelas = result[0][1]
+        kategori = result[0][2]
+        return kelas, kategori
 
-            self.db.insertValue(query, data)
-            print("=== Anda Berhasil Meng-input Data Jadwal ===")
-        else:
-            print("=== Insert data anda gagal ===")
+
+    def get_guru(self, result) :
+        return result[0][1],result[0][9], result[0][10]
+        
+    def insert_jadwal(self):
+try :
+            print("===== Input Jadwal =====")
+            mapelku = self.mapel()
+            quguru = """SELECT `Id_guru`, `Nama`, `Bidang_mapel` FROM `guru` WHERE Bidang_mapel=%s"""
+            self.db.selectValuepretty(quguru, (mapelku, ))
+            
+            Id_guru = int(input("Masukkan ID Guru\t: "))
+            qdata_guru = """SELECT * FROM `guru` WHERE Id_guru=%s"""
+            resultg = self.db.selectValue(qdata_guru, (Id_guru, ))
+            if not resultg :
+                raise ValueError("=== Id Guru tidak ditemukan ===")
+            nama, mapel, gaji = self.get_guru(resultg)
+
+
+            Kelas = self.kelas()
+            Jam_mulai, Jam_selesai = self.check_jam()
+
+            query = """SELECT * FROM paket_belajar WHERE Kelas=%s"""
+            data = (Kelas, )
+            self.db.selectValuepretty(query, data)
+            Id_paket = int(input("Masukan Id Belajar : "))
+
+            paket_query = """SELECT * FROM paket_belajar WHERE Id_paket_belajar=%s"""
+            result = self.db.selectValue(paket_query, (Id_paket,))
+            if not result :
+                raise ValueError("=== Id Paket Belajar tidak ditemukan ===")
+            
+            kelas, kategori = self.get_data_paket(result)
+
+
+            Tanggal_str = input("Masukkan Tanggal (format: YYYY-MM-DD)\t: ")
+            Tanggal = datetime.strptime(Tanggal_str, "%Y-%m-%d").date()
+
+
+            ruang_query ="""SELECT * FROM `ruangan`"""
+            self.db.selectValuepretty(ruang_query, data=None)
+
+            Id_ruangan = int(input("Masukkan ID Ruangan\t: "))
+            select_query = """SELECT `Id_ruangan`, `Kondisi_ruangan`, `Kapasitas_kursi` FROM `ruangan` WHERE Id_ruangan=%s"""
+            resultR = self.db.selectValue(select_query, (Id_ruangan,))
+            if not resultR :
+                raise ValueError("=== Id Ruang tidak ditemukan ===")
+            if resultR[0][1] == "Tidak layak" :
+                raise ValueError("=== Ruang Tidak Layak ===")
+
+
+            x = PrettyTable()
+            x.add_column("Id Guru", Id_guru)
+            x.add_column("Nama Guru", nama)
+            x.add_column("Mapel Guru", mapel)
+            x.add_column("Kelas", mapel)
+            x.add_column("Jam", f"{Jam_mulai}-{Jam_selesai}")
+            x.add_column("Tanggal", Tanggal)
+            x.add_column("Id_ruangan", Id_ruangan)
+            print(x)
+            confirm = input("Apakah anda ingin melanjutkan tindakan ini (y/n): ")
+            
+            if confirm == 'y':
+                query = """INSERT INTO `jadwal`(`Id_guru`, `Id_paket_belajar`, `Kelas`, `Mapel`, `Jam_mulai`, `Jam_selesai`, `Tanggal`, `Id_ruangan`, `Paket_belajar`) 
+                VALUES 
+                (%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+                data = (Id_guru, Id_paket, kelas, mapel, Jam_mulai, Jam_selesai, Tanggal, Id_ruangan, kategori)
+                self.db.insertValue(query, data)
+
+                queryguru = """UPDATE `guru` SET 
+                    `Gaji`=%s,
+                    WHERE `Id_guru`=%s"""
+                tambahgaji = gaji+20000
+                dataguru =(tambahgaji, )
+                self.db.insertValue(queryguru, dataguru)
+                print("=== Anda Berhasil Meng-input Data Jadwal ===")
+            else:
+                raise ValueError("=== Insert data anda gagal ===")
+        except Exception as e :
+            print(e)
 
     def update_jadwal(self):
-        print("=== Update Jadwal ===")
-        
+               print("=== Update Jadwal ===")
+        self.read_jadwal()
         Id_jadwal = int(input("Masukkan ID Jadwal yang akan diupdate: "))
         
         query = """SELECT * FROM Jadwal WHERE Id_jadwal = %s"""
         data = (Id_jadwal,)
         
+        result = self.db.selectValue(query, data)
+
         self.db.selectValuepretty(query, data)
-        
         confirmation = input("Apakah Anda ingin melanjutkan proses update (y/n)? ").lower()
         
         if confirmation == 'y':
-            Kelas = input("Masukkan kelas baru: ")
-            Mapel = input("Masukkan mapel baru: ")
-            Jam = input("Masukkan jam baru (format: HH:MM:SS): ")
-            Tanggal = input("Masukkan tanggal baru (format: YYYY-MM-DD): ")
-            Id_ruangan = int(input("Masukkan ID ruangan baru: "))
-            Paket_belajar = input("Masukkan paket belajar baru (Reguler/Premium): ").capitalize()
-            
-            update_query = """UPDATE Jadwal SET Kelas=%s, Mapel=%s, Jam=%s, Tanggal=%s, Id_ruangan=%s, Paket_belajar=%s WHERE Id_jadwal=%s"""
-            
-            new_data = (Kelas, Mapel, Jam, Tanggal, Id_ruangan, Paket_belajar, Id_jadwal)
-            
-            self.db.insertValue(update_query, new_data)
-            
+            self.edit_jadwal(result,Id_jadwal)
             print("=== Data Jadwal berhasil diupdate ===")
         else:
             print("=== Proses update dibatalkan ===")
 
     def edit_jadwal(self, result, Id_jadwal):
         Id_guru = result[0][1]
-        Kelas = result[0][2]
-        Mapel = result[0][3]
-        Jam = result[0][4]
-        Tanggal = result[0][5]
-        Id_ruangan = result[0][6]
-        Paket_belajar = result[0][7]
+        Bidang_mapel = result[0][4]
+        Id_ruangan = result[0][8]
+
 
         while True:
-            print("=== Edit Value ===")
-            print("1. Id Guru")
-            print("2. Kelas")
-            print("3. Mapel")
-            print("4. Jam")
-            print("5. Tanggal")
-            print("6. Id Ruangan")
-            print("7. Paket Belajar")
-            pilih = int(input("Data yang ingin diubah: "))
+            try :
+                print("=== Edit Value ===")
+                print("1. Id Guru")
+                print("2. Id Ruangan")
+                pilih = int(input("Data yang ingin diubah: "))
 
-            if pilih == 1:
-                Id_guru = int(input("Masukkan ID Guru baru: "))
-            elif pilih == 2:
-                Kelas = input("Masukkan Kelas baru (SD/SMP/SMA): ").upper()
-            elif pilih == 3:
-                mapels = [
-                    "Bindo", "Bahasa Inggris", "Ilmu Pengetahuan Alam", 
-                    "TPS", "Matematika", "Bahasa Indonesia", "Biologi",
-                    "Kimia", "Geografi", "Ekonomi", "Sosiologi", "Sejarah", "Fisika"
-                ]
-                for idx, mapel in enumerate(mapels, 1):
-                    print(f"{idx}. {mapel}")
-                idx_mapel = int(input("Pilih Mapel baru: "))
-                Mapel = mapels[idx_mapel - 1]
-            elif pilih == 4:
-                Jam = input("Masukkan Jam baru (format: HH:MM:SS): ")
-            elif pilih == 5:
-                Tanggal = input("Masukkan Tanggal baru (format: YYYY-MM-DD): ")
-            elif pilih == 6:
-                Id_ruangan = int(input("Masukkan ID Ruangan baru: "))
-            elif pilih == 7:
-                Paket_belajar = input("Masukkan Paket Belajar baru (Reguler/Premium): ").capitalize()
-            else:
-                print("Pilihan tidak tersedia")
+                if pilih == 1:
+                    quguru = """SELECT `Id_guru`, `Nama`, `Bidang_mapel` FROM `guru` WHERE Bidang_mapel=%s"""
+                    self.db.selectValuepretty(quguru, (Bidang_mapel, ))
+                    data = self.db.selectValue(quguru,(Bidang_mapel, ))
+                    if not data :
+                        raise ValueError("Data tidak ditemukan")
+                    Id_guru = int(input("Masukkan ID Guru baru\t: "))
 
-            lanjut = str(input("Ganti data lain (y/n)? "))
-            if lanjut.lower() != 'y':
-                break
 
-        query = """UPDATE Jadwal SET Id_guru = %s, Kelas = %s, Mapel = %s, Jam = %s, Tanggal = %s, Id_ruangan = %s, Paket_belajar = %s WHERE Id_jadwal = %s"""
-        data = (Id_guru, Kelas, Mapel, Jam, Tanggal, Id_ruangan, Paket_belajar, Id_jadwal)
-        self.db.insertValue(query, data)
-        print("=== Anda Berhasil Meng-update Data Jadwal ===")
-        
+                elif pilih == 2:
+                    ruang_query ="""SELECT * FROM `ruangan`"""
+                    self.db.selectValuepretty(ruang_query, data=None)
+
+                    Id_ruangan = int(input("Masukkan ID Ruangan baru\t: "))
+                    select_query = """SELECT `Id_ruangan`, `Kondisi_ruangan`, `Kapasitas_kursi` FROM `ruangan` WHERE Id_ruangan=%s"""
+                    resultR = self.db.selectValue(select_query, (Id_ruangan,))
+                    if not resultR :
+                        raise ValueError("=== Id Ruang tidak ditemukan ===")
+                    if resultR[0][1] == "Tidak layak" :
+                        raise ValueError("=== Ruang Tidak Layak ===")
+                    
+                else:
+                    print("Pilihan tidak tersedia")
+
+                lanjut = str(input("Ganti data lain (y/n)? "))
+                if lanjut.lower() != 'y':
+                    break
+
+                query = """UPDATE Jadwal SET Id_guru = %s, Id_ruangan = %s WHERE Id_jadwal = %s"""
+                data = (Id_guru, Id_ruangan, Id_jadwal)
+                self.db.insertValue(query, data)
+                print("=== Anda Berhasil Meng-update Data Jadwal ===")
+            except Exception as e  :
+                print(e)
+                
     def delete_jadwal(self):
         print("=== Delete Jadwal ===")
+        self.read_jadwal()
         Id_jadwal = int(input("Masukkan ID Jadwal yang akan dihapus: "))
 
         query_select = """SELECT * FROM jadwal WHERE Id_jadwal = %s"""
@@ -262,9 +352,17 @@ class jadwal :
             print("=== Pembatalan Penghapusan Data Jadwal ===")
     
     def read_jadwal(self):
-        print("=== Read Jadwal ===")
-        query = """SELECT * FROM jadwal"""
-        self.db.selectValueprettey(query, data=None)
+        print("=== Lihat Jadwal ===")
+        print("1. Lihat semua jadwal")
+        print("2. Lihat bedasarkan mapel")
+        pilih = int(input("Pilih menu : "))
+        if pilih == 1 :
+            query = """SELECT * FROM jadwal"""
+            self.db.selectValueprettey(query, data=None)
+        elif pilih == 2 :
+            mapelku = self.mapel()
+            quguru = """SELECT * FROM `jadwal` WHERE mapel=%s"""
+            self.db.selectValuepretty(quguru, (mapelku, ))
         print("=== Anda Berhasil menampilkan Data Jadwal ===")
 
 class jadwal_pelayanan :
