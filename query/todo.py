@@ -34,10 +34,10 @@ class login :
                 if result and len(result) > 0:  
                     password = result[0][2]
 
-                    inppass = str(input("masukan password : "))
+                    inppass = str(input("Masukan Password\t\t: "))
                     if inppass == password:
                         print("Login berhasil!")
-                        print(f"Selamat datang {result[0][1]}")
+                        print(f"Selamat Datang {result[0][1]}")
                         run = False 
                         os.system('pause')
                         id = result[0][0]
