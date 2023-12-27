@@ -141,36 +141,58 @@ class akses_Pegawai(Pegawai):
         super().__init__(db)
         self.id = id
         self.nama = nama
-    
+        
     def menu(self) :
         while True :
             os.system('cls')
+            if self.jabatan != "OB" :
+                print(f"=== Selamat Datang {self.nama} ===")
+                print("==[1] Absen ")
+                print("==[2] Cari Data")
+                print("==[3] Tambah Data")
+                print("==[4] Ubah Data")
+                print("==[5] Detele")
+                print("==[0] logout")
+                pilih = int(input("Pilih menu : "))
+                if pilih == 1 :
+                    self.Absen_pegawai() # done
+                elif pilih == 2 :
+                    self.Cari() #not yet test
+                elif pilih == 3 :
+                    self.Insert()
+                elif pilih == 4 :
+                    self.ubah()
+                elif pilih == 5 :
+                    self.delete()
+                elif pilih == 0 :
+                    print(f"\n\t=== Terimakasih {self.nama} ===")
+                    print("=== Jangan Lupa Datang Kembali ===\n")
+                    exit()
+                else :
+                    print("Pilihan tidak tersedia")
+                os.system('pause')
+            
+            # OB
             print(f"=== Selamat Datang {self.nama} ===")
             print("==[1] Absen ")
-            print("==[2] Cari Data")
-            print("==[3] Tambah Data")
-            print("==[4] Ubah Data")
-            print("==[5] Detele")
+            print("==[2] Ubah Data Diri")
+            print("==[3] Detele")
             print("==[0] logout")
             pilih = int(input("Pilih menu : "))
             if pilih == 1 :
-                self.Absen_pegawai() # done
+                self.Absen_pegawai()
             elif pilih == 2 :
-                self.Cari() #not yet test
+                self.update_pegawai(self.id)
             elif pilih == 3 :
-                self.Insert()
-            elif pilih == 4 :
-                self.ubah()
-            elif pilih == 5 :
-                self.delete()
+                self.delete_Pegawai(self.id)
             elif pilih == 0 :
                 print(f"\n\t=== Terimakasih {self.nama} ===")
-                print("\t=== Jangan Lupa Datang Kembali ===\n")
+                print("=== Jangan Lupa Datang Kembali ===\n")
                 exit()
             else :
                 print("Pilihan tidak tersedia")
             os.system('pause')
-
+            
     def Absen_pegawai(self) :
         while True :
             os.system('cls')
