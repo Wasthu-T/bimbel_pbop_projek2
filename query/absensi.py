@@ -239,4 +239,3 @@ class absen_siswa :
         Id_jadwal = int(input("Masukan Id jadwal : "))
         data = (Id_siswa, Id_jadwal)
         self.db.selectValuepretty(query, data)
- 
