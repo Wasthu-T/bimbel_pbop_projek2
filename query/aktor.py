@@ -160,7 +160,7 @@ class Siswa:
         print("===== Lihat Siswa =====")
         print("== 1. Lihat semua")
         print("== 2. Cari bedasarkan Id Paket Belajar")
-        print("== 2. Cari bedasarkan Tagihan")
+        print("== 3. Cari bedasarkan Tagihan")
         pilih = int(input("Pilih menu : "))
         if pilih == 1 :
             query = """SELECT `Id_siswa`, `Nama`, `Id_paket_belajar`, `Email`, `Nomor`, `Kelas`, `Jenis_kelamin`, `Alamat`, `Tagihan` FROM `siswa`"""
@@ -477,7 +477,7 @@ class Pegawai:
                 print(e)
 
     def inp_tanggal(self) :
-        date_str = input("Masukkan tanggal tayang (format: YYYY-MM-DD)\t: ")
+        date_str = input("Masukkan tanggal lahir (format: YYYY-MM-DD)\t: ")
         date = datetime.strptime(date_str, "%Y-%m-%d")
         Tanggal = date.date() 
         return Tanggal
@@ -513,7 +513,7 @@ class Pegawai:
 
     def Tunjangan(self, status, gaji) :
         if status == "Tetap" :
-            istri = str(input("Apa kamu memiliki istri? (y/n) "))
+            istri = str(input("Apa kamu sudah berkeluarga? (y/n) "))
             if istri.lower() == "y" :
                 while True :
                     anak = int(input("Kamu memiliki berapa anak? : "))
