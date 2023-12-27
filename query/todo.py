@@ -1,3 +1,4 @@
+import os
 from prettytable import PrettyTable
 from email_validator import validate_email, EmailNotValidError
 from datetime import datetime
