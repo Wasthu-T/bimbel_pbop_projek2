@@ -1,13 +1,14 @@
-import os
 from prettytable import PrettyTable
 from email_validator import validate_email, EmailNotValidError
-from datetime import datetime
+from datetime import datetime, timedelta
 from query.aktor import Siswa, Guru, Pegawai
+import os 
 import locale
 
 
 # set bahasa waktu lokal indonesia
 locale.setlocale(locale.LC_TIME, 'id_ID')
+
 class login :
     def __init__(self, db):
         self.db = db
@@ -42,6 +43,7 @@ class login :
                         os.system('pause')
                         id = result[0][0]
                         nama = result[0][1]
+                        
                         return id, nama
                     else:
                         raise ValueError("Email atau password salah")
@@ -81,7 +83,6 @@ class login :
             except Exception as e:
                 print(e)
 
-
 class transaksi :
     def __init__(self, db):
         self.db = db
@@ -99,9 +100,8 @@ class transaksi :
             else :
                 print("pilihan tidak tersedia harap pilih yang benar")
 
-    def insert_transaksi(self):
+    def insert_transaksi(self, Id_pegawai):
         print("===== Input Transaksi =====")
-        Id_pegawai = int(input("Masukan ID Pegawai\t: "))
         Id_siswa = int(input("Masukan ID Siswa\t: "))
         Id_paket_belajar = int(input("Masukan ID Paket Belajar\t: "))
 
@@ -134,7 +134,7 @@ class jadwal :
     def __init__(self, db):
         self.db = db
     
-   def kelas(self) :
+    def kelas(self) :
         while True :
             print("\n=== Jenjang Pendidikan ===")
             print("1. SD")
@@ -184,7 +184,7 @@ class jadwal :
                 return mapel[opsi - 1]
             else:
                 print("Pilihan tidak tersedia")
-
+    
     def check_jam(self) :
         try:
             jam_mulai = input("Mulai Jam (HH:MM:SS): ")
@@ -205,10 +205,11 @@ class jadwal :
             if waktu_selesai > batas_waktu:
                 raise ValueError("Durasi pembelajaran tidak boleh lebih dari 1 jam 30 menit")
 
-            return waktu_mulai,waktu_selesai           
+            return waktu_mulai,waktu_selesai
+
         except Exception as e:
             print(e)
-        
+
     def get_data_paket(self, result) :
         kelas = result[0][1]
         kategori = result[0][2]
@@ -217,17 +218,30 @@ class jadwal :
 
     def get_guru(self, result) :
         return result[0][1],result[0][9], result[0][10]
-        
+
+
     def insert_jadwal(self):
-try :
+        try :
             print("===== Input Jadwal =====")
             mapelku = self.mapel()
             quguru = """SELECT `Id_guru`, `Nama`, `Bidang_mapel` FROM `guru` WHERE Bidang_mapel=%s"""
             self.db.selectValuepretty(quguru, (mapelku, ))
+
             
             Id_guru = int(input("Masukkan ID Guru\t: "))
             qdata_guru = """SELECT * FROM `guru` WHERE Id_guru=%s"""
             resultg = self.db.selectValue(qdata_guru, (Id_guru, ))
+
+            a = 0
+            check_id = self.db.selectValue(quguru, (mapelku, ))
+            list_id = []
+            for a in range(len(check_id)) :
+                check_id_guru = check_id[a][0]
+                list_id.append(check_id_guru)
+
+            if Id_guru not in list_id : 
+                raise ValueError("=== Id Guru tidak ditemukan ===")
+                
             if not resultg :
                 raise ValueError("=== Id Guru tidak ditemukan ===")
             nama, mapel, gaji = self.get_guru(resultg)
@@ -239,11 +253,22 @@ try :
             query = """SELECT * FROM paket_belajar WHERE Kelas=%s"""
             data = (Kelas, )
             self.db.selectValuepretty(query, data)
-            Id_paket = int(input("Masukan Id Belajar : "))
 
+            Id_paket = int(input("Masukan Id Belajar : "))
             paket_query = """SELECT * FROM paket_belajar WHERE Id_paket_belajar=%s"""
             result = self.db.selectValue(paket_query, (Id_paket,))
-            if not result :
+
+            b= 0
+            check_paket = self.db.selectValue(query, data)
+            list_paket = []
+            for b in range(len(check_paket)) :
+                check_id_paket = check_paket[b][0]
+                list_paket.append(check_id_paket)
+
+            if Id_paket not in list_paket :
+                raise ValueError("=== Id Paket Belajar tidak ditemukan ===")
+
+            if not result:
                 raise ValueError("=== Id Paket Belajar tidak ditemukan ===")
             
             kelas, kategori = self.get_data_paket(result)
@@ -257,7 +282,7 @@ try :
             self.db.selectValuepretty(ruang_query, data=None)
 
             Id_ruangan = int(input("Masukkan ID Ruangan\t: "))
-            select_query = """SELECT `Id_ruangan`, `Kondisi_ruangan`, `Kapasitas_kursi` FROM `ruangan` WHERE Id_ruangan=%s"""
+            select_query = """SELECT * FROM `ruangan` WHERE Id_ruangan=%s"""
             resultR = self.db.selectValue(select_query, (Id_ruangan,))
             if not resultR :
                 raise ValueError("=== Id Ruang tidak ditemukan ===")
@@ -296,30 +321,46 @@ try :
             print(e)
 
     def update_jadwal(self):
-               print("=== Update Jadwal ===")
-        self.read_jadwal()
-        Id_jadwal = int(input("Masukkan ID Jadwal yang akan diupdate: "))
-        
-        query = """SELECT * FROM Jadwal WHERE Id_jadwal = %s"""
-        data = (Id_jadwal,)
-        
-        result = self.db.selectValue(query, data)
+        try : 
+            print("=== Update Jadwal ===")
+            self.read_jadwal()
+            Id_jadwal = int(input("Masukkan ID Jadwal yang akan diupdate: "))
+            
+            query = """SELECT * FROM Jadwal WHERE Id_jadwal = %s"""
+            querytes = """SELECT * FROM Jadwal"""
+            data = (Id_jadwal,)
+            a = 0
+            check_id = self.db.selectValue(querytes, data=None)
+            list_check = []
+            for a in range(len(check_id)) :
+                check_id_jadwal = check_id[a][0]
+                list_check.append(check_id_jadwal)
 
-        self.db.selectValuepretty(query, data)
-        confirmation = input("Apakah Anda ingin melanjutkan proses update (y/n)? ").lower()
-        
-        if confirmation == 'y':
-            self.edit_jadwal(result,Id_jadwal)
-            print("=== Data Jadwal berhasil diupdate ===")
-        else:
-            print("=== Proses update dibatalkan ===")
+            if Id_jadwal not in list_check: 
+                raise ValueError("=== Id Jadwal tidak ditemukan ===")
+                
+            if not check_id :
+                raise ValueError("=== Id Jadwal tidak ditemukan ===")
+            
+            self.db.selectValuepretty(query, data)
+            result = self.db.selectValue(query, data)
+            confirmation = input("Apakah Anda ingin melanjutkan proses update (y/n)? ").lower()
+            
+            if confirmation == 'y':
+                self.edit_jadwal(result, Id_jadwal)
+                print("=== Data Jadwal berhasil diupdate ===")
+            else:
+                print("=== Proses update dibatalkan ===")
+
+        except Exception as e :
+            print(e)
+            os.system('pause')
 
     def edit_jadwal(self, result, Id_jadwal):
         Id_guru = result[0][1]
         Bidang_mapel = result[0][4]
         Id_ruangan = result[0][8]
-
-
+        print(Bidang_mapel)
         while True:
             try :
                 print("=== Edit Value ===")
@@ -333,7 +374,18 @@ try :
                     data = self.db.selectValue(quguru,(Bidang_mapel, ))
                     if not data :
                         raise ValueError("Data tidak ditemukan")
+                    
+                    a = 0
                     Id_guru = int(input("Masukkan ID Guru baru\t: "))
+                    for a in range(len(data)) :
+                        check_id_guru = data[a][1]
+
+                    if check_id_guru != Id_guru : 
+                        raise ValueError("=== Id Guru tidak ditemukan ===")
+                    
+                    query = """UPDATE Jadwal SET Id_guru = %s WHERE Id_jadwal = %s"""
+                    data = (Id_guru, Id_jadwal)
+                    self.db.insertValue(query, data)
 
 
                 elif pilih == 2:
@@ -347,6 +399,10 @@ try :
                         raise ValueError("=== Id Ruang tidak ditemukan ===")
                     if resultR[0][1] == "Tidak layak" :
                         raise ValueError("=== Ruang Tidak Layak ===")
+                
+                    query = """UPDATE Jadwal SET Id_ruangan = %s WHERE Id_jadwal = %s"""
+                    data = (Id_ruangan, Id_jadwal)
+                    self.db.insertValue(query, data)
                     
                 else:
                     print("Pilihan tidak tersedia")
@@ -354,32 +410,48 @@ try :
                 lanjut = str(input("Ganti data lain (y/n)? "))
                 if lanjut.lower() != 'y':
                     break
-
-                query = """UPDATE Jadwal SET Id_guru = %s, Id_ruangan = %s WHERE Id_jadwal = %s"""
-                data = (Id_guru, Id_ruangan, Id_jadwal)
-                self.db.insertValue(query, data)
                 print("=== Anda Berhasil Meng-update Data Jadwal ===")
             except Exception as e  :
                 print(e)
-                
+                os.system('pause')
+            
     def delete_jadwal(self):
-        print("=== Delete Jadwal ===")
-        self.read_jadwal()
-        Id_jadwal = int(input("Masukkan ID Jadwal yang akan dihapus: "))
+        try :
+            print("=== Delete Jadwal ===")
+            self.read_jadwal()
+            Id_jadwal = int(input("Masukkan ID Jadwal yang akan dihapus: "))
 
-        query_select = """SELECT * FROM jadwal WHERE Id_jadwal = %s"""
-        data_select = (Id_jadwal,)
-        self.db.selectValuepretty(query_select, data_select)
+            query_select = """SELECT * FROM jadwal WHERE Id_jadwal = %s"""
+            data_select = (Id_jadwal,)
+            self.db.selectValuepretty(query_select, data_select)
 
-        test = str(input("Apakah Anda yakin ingin menghapus data ini (y/n)? "))
-        
-        if test.lower() == 'y':
-            query_delete = """DELETE FROM jadwal WHERE Id_jadwal = %s"""
-            data_delete = (Id_jadwal,)
-            self.db.insertValue(query_delete, data_delete)
-            print("=== Anda Berhasil Menghapus Data Jadwal ===")
-        else:
-            print("=== Pembatalan Penghapusan Data Jadwal ===")
+            data = self.db.selectValue(query_select, data_select)
+
+            if not data :
+                raise ValueError("Data tidak ditemukan")
+            
+            a = 0
+            Id_jadwal = int(input("Masukkan Id Jadwal \t: "))
+            list_jadwal = []
+            for a in range(len(data)) :
+                check_Id_jadwal = data[a][1]
+                list_jadwal.append(check_Id_jadwal)
+
+            if Id_jadwal not in list_jadwal : 
+                raise ValueError("=== Id Jadwal tidak ditemukan ===")
+
+            test = str(input("Apakah Anda yakin ingin menghapus data ini (y/n)? "))
+            
+            if test.lower() == 'y':
+                query_delete = """DELETE FROM jadwal WHERE Id_jadwal = %s"""
+                data_delete = (Id_jadwal,)
+                self.db.insertValue(query_delete, data_delete)
+                print("=== Anda Berhasil Menghapus Data Jadwal ===")
+            else:
+                print("=== Pembatalan Penghapusan Data Jadwal ===")
+        except Exception as e :
+            print(e)
+            os.system('pause')
     
     def read_jadwal(self):
         print("=== Lihat Jadwal ===")
@@ -388,7 +460,7 @@ try :
         pilih = int(input("Pilih menu : "))
         if pilih == 1 :
             query = """SELECT * FROM jadwal"""
-            self.db.selectValueprettey(query, data=None)
+            self.db.selectValuepretty(query, data=None)
         elif pilih == 2 :
             mapelku = self.mapel()
             quguru = """SELECT * FROM `jadwal` WHERE mapel=%s"""
@@ -482,6 +554,8 @@ class jadwal_pelayanan :
         print("=== Read Jadwal Pelayanan ===")
         query = """SELECT * FROM jadwal_pelayanan"""
         self.db.selectValuepretty(query, data=None)
+
+# done
 class ruangan :
     def __init__(self, db):
         self.db = db
@@ -596,7 +670,7 @@ class ruangan :
             self.db.selectValuepretty(query, ("Tidak layak", ))
         print("=== Anda Berhasil Menampilkan Data Ruangan ===")
 
-
+# done
 class paket_belajar :
     def __init__(self, db):
         self.db = db
