@@ -121,7 +121,8 @@ jadwal_pelayanan = '''CREATE TABLE IF NOT EXISTS Jadwal_pelayanan (
    Id_guru int(10),
    FOREIGN KEY (Id_guru) REFERENCES guru(Id_guru) ON DELETE CASCADE,
    Mapel ENUM('Matematika', 'Bahasa Indonesia', 'Bahasa Inggris','Tes Potensi Skolastik', 'Ilmu Pengetahuan Alam', 'Biologi', 'Kimia', 'Fisika', 'Geografi', 'Ekonomi', 'Sosiologi', 'Sejarah') NOT NULL,
-   Jam_pelayanan time,
+   Jam_mulai_pelayanan time,
+   Jam_selesai_pelayanan time,
    Id_ruangan int(10),
    FOREIGN KEY (Id_ruangan) REFERENCES ruangan(Id_ruangan) ON DELETE CASCADE
     );
