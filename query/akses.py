@@ -83,7 +83,7 @@ class akses_Guru(Guru):
                 elif pilih == 2 :
                     self.lihat_jadwal()
                 elif pilih == 3 :
-                    self.update_guru()
+                    self.update_guru(self.id)
                 elif pilih == 0 :
                     print(f"\n\t=== Terimakasih {self.nama} ===")
                     print("\t=== Jangan Lupa Datang Kembali ===\n")
