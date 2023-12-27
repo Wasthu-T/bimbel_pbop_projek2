@@ -454,18 +454,24 @@ class jadwal :
             os.system('pause')
     
     def read_jadwal(self):
-        print("=== Lihat Jadwal ===")
-        print("1. Lihat semua jadwal")
-        print("2. Lihat bedasarkan mapel")
-        pilih = int(input("Pilih menu : "))
-        if pilih == 1 :
-            query = """SELECT * FROM jadwal"""
-            self.db.selectValuepretty(query, data=None)
-        elif pilih == 2 :
-            mapelku = self.mapel()
-            quguru = """SELECT * FROM `jadwal` WHERE mapel=%s"""
-            self.db.selectValuepretty(quguru, (mapelku, ))
-        print("=== Anda Berhasil menampilkan Data Jadwal ===")
+        while True : 
+            print("=== Lihat Jadwal ===")
+            print("1. Lihat semua jadwal")
+            print("2. Lihat bedasarkan mapel")
+            pilih = int(input("Pilih menu : "))
+            if pilih == 1 :
+                query = """SELECT * FROM jadwal"""
+                self.db.selectValuepretty(query, data=None)
+                print("=== Anda Berhasil menampilkan Data Jadwal ===")
+                break
+            elif pilih == 2 :
+                mapelku = self.mapel()
+                quguru = """SELECT * FROM `jadwal` WHERE mapel=%s"""
+                self.db.selectValuepretty(quguru, (mapelku, ))
+                print("=== Anda Berhasil menampilkan Data Jadwal ===")
+                break
+            else :
+                print("=== Pilihan tidak tersedia ===")
 
 class jadwal_pelayanan :
     def __init__(self, db):
