@@ -75,9 +75,9 @@ while True :
             peg.insert_pegawai()
         elif pilih == 2 :
             id = login(db)
-            get_id_name = id.cheking("pegawai")
-            id, nama = get_id_name
-            my = akses_Pegawai(db,id,nama)
+            get_id_name = id.cheking_jabatan("pegawai")
+            id, nama, jabatan = get_id_name
+            my = akses_Pegawai(db,id,nama, jabatan)
             my.menu()
 
             
