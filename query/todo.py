@@ -495,7 +495,7 @@ class ruangan :
             if pilih == 1 :
                 return "Layak"
             elif pilih == 2 :
-                return "Tidak Layak"
+                return "Tidak layak"
             else :
                 print("pilihan tidak tersedia harap pilih yang benar")
 
@@ -518,17 +518,27 @@ class ruangan :
             print("=== Anda Gagal Meng-input Data Ruangan ===")
 
     def edit_ruangan(self, result, Id_ruangan) :
-        Kondisi_ruangan = result[0][1]
-        Kapasitas_kursi = result[0][2]
         while True :
+            Kondisi_ruangan = result[0][1]
+            Kapasitas_kursi = result[0][2]
+            print(Kondisi_ruangan)
+            print(Kapasitas_kursi)
             print("=== Edit Value ===")
             print("1. Kondisi Ruangan")
             print("2. Kapasitas Kursi")
             pilih = int(input("Data yang ingin diubah : "))
             if pilih == 1:
                 Kondisi_ruangan = self.kondisi_ruangan()
+                query = """UPDATE `ruangan` SET `Kondisi_ruangan`=%s WHERE `Id_ruangan`=%s"""
+                data = (Kondisi_ruangan, Id_ruangan)
+                self.db.insertValue(query, data)
+                print(Kondisi_ruangan)
             elif pilih == 2:
                 Kapasitas_kursi = int(input("Masukan Kapasitas Kursi\t: "))
+                query = """UPDATE `ruangan` SET `Kapasitas_kursi`=%s WHERE `Id_ruangan`=%s"""
+                data = (Kapasitas_kursi, Id_ruangan)
+                self.db.insertValue(query, data)
+                print(Kapasitas_kursi)
             else : 
                 print("Pilihan tidak tersedia")
             lanjut = str(input("Ganti data lain (y/n)? "))
@@ -536,12 +546,10 @@ class ruangan :
                 continue
             else :
                 break
-        query = """UPDATE ruangan SET `Kondisi_ruangan`= %s, `Kapasitas_kursi`=%s WHERE `Id_ruangan` = %s"""
-        data = (Kondisi_ruangan, Kapasitas_kursi)
-        self.db.insertValue(query, data)
 
     def update_ruangan(self) :
         print("=== Update Ruangan ===")
+        self.read_ruangan()
         Id_ruangan = int(input("Masukkan ID Ruangan yang akan diupdate: "))
         query = """SELECT * FROM ruangan WHERE Id_ruangan = %s"""
         data = (Id_ruangan,)
@@ -556,6 +564,7 @@ class ruangan :
 
     def delete_ruangan(self):
         print("=== Delete Ruangan ===")
+        self.read_ruangan()
         Id_ruangan = int(input("Masukkan ID Ruangan yang akan dihapus: "))
         query = """SELECT * FROM ruangan WHERE Id_ruangan = %s"""
         data = (Id_ruangan,)
@@ -571,10 +580,22 @@ class ruangan :
             print("=== Anda Gagal Menghapus Data Ruangan ===")
 
     def read_ruangan(self) :
-        print("=== Read Ruangan ===")
-        query = """SELECT * FROM ruangan"""
-        self.db.selectValuepretty(query, data=None)
+        print("=== Lihat Ruangan ===")
+        print("1. Lihat semua")
+        print("2. Lihat Ruangan Layak")
+        print("2. Lihat Ruangan Tidak layak")
+        pilih = int(input("Pilih menu : "))
+        if pilih == 1 :
+            query = """SELECT * FROM ruangan"""
+            self.db.selectValuepretty(query, data=None)
+        elif pilih == 2 :
+            query = """SELECT * FROM ruangan WHERE Kondisi_ruangan=%s"""
+            self.db.selectValuepretty(query, ("Layak", ))
+        elif pilih == 3 :
+            query = """SELECT * FROM ruangan WHERE Kondisi_ruangan=%s"""
+            self.db.selectValuepretty(query, ("Tidak layak", ))
         print("=== Anda Berhasil Menampilkan Data Ruangan ===")
+
 
 class paket_belajar :
     def __init__(self, db):
