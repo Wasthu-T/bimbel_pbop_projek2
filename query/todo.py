@@ -100,35 +100,234 @@ class transaksi :
             else :
                 print("pilihan tidak tersedia harap pilih yang benar")
 
+    def kembalian(self, tagihan, bayar) :
+        sisa_tagihan = tagihan-bayar
+        if sisa_tagihan < 0 :
+            sisa_tagihan = 0
+
+        kembalian = bayar-tagihan
+        if kembalian < 0 :
+            kembalian = 0
+
+        return kembalian, sisa_tagihan
+        
+    def bayar_tagihan(self, Id_siswa) :
+        try :
+            query_siswa = """SELECT 
+            `Id_siswa`, `Nama`, `Email`, `Id_paket_belajar`, `Nomor`, `Kelas`, `Jenis_kelamin`, `Alamat`, `Tagihan` 
+            FROM `siswa` WHERE Id_siswa=%s"""
+
+            resultsiswa = self.db.selectValue(query_siswa, (Id_siswa, ))
+            Id_Paket_belajar = resultsiswa[0][3]
+            Tagihan = resultsiswa[0][8]
+
+            if Tagihan == 0 :
+                raise ValueError("Anda Tidak Memiliki Tagihan")
+
+            x = PrettyTable()
+            x.field_names=["Id Paket Belajar", "Tagihan Anda"]
+            x.add_row([Id_Paket_belajar,Tagihan])
+            print(x)
+            test = str(input("Ingin membayar tagihan (y/n) ? "))
+            if test == "y" : 
+                Jenis_pembayaran = "Transfer"
+                Bayar = int(input("Masukan Nominal Bayar\t: "))
+                if Bayar > Tagihan :
+                    raise ValueError("Anda memasukkan jumlah lebih dari tagihan")
+                Kembalian, tagihan_tersisa = self.kembalian(Tagihan, Bayar)
+                Tgl_transaksi = datetime.now().date()
+
+                quary = """INSERT INTO transaksi(Id_pegawai, Id_siswa, Id_paket_belajar, Jenis_pembayaran, Bayar, Kembalian, Tgl_transaksi) VALUES (%s, %s, %s, %s, %s, %s, %s)"""
+                data = (None, Id_siswa, Id_Paket_belajar, Jenis_pembayaran, Bayar, Kembalian, Tgl_transaksi)
+                self.db.insertValue(quary,data)
+
+                query_tag = """UPDATE `siswa` SET `Tagihan`=%s WHERE Id_siswa=%s"""
+                edit = (tagihan_tersisa, Id_siswa)
+                self.db.insertValue(query_tag, edit)
+                if tagihan_tersisa != 0 :
+                    print(f"Tagihan anda masih : {tagihan_tersisa}")
+
+                print("=== Anda Berhasil Membayar Paket Belajar ===")
+            else : 
+                print("=== Kembali ke menu utama ===")
+                
+
+        except Exception as e :
+            print(e)
+
     def insert_transaksi(self, Id_pegawai):
-        print("===== Input Transaksi =====")
-        Id_siswa = int(input("Masukan ID Siswa\t: "))
-        Id_paket_belajar = int(input("Masukan ID Paket Belajar\t: "))
+        try :
+            print("===== Input Transaksi =====")
+            id_siswa, Id_Paket_belajar, Tagihan = self.get_siswa()
+            if not (id_siswa and Id_Paket_belajar and Tagihan) :
+                raise ValueError("Data kurang lengkap")
+            
+            if Tagihan == 0 :
+                raise ValueError("Anda tidak memiliki tagihan")
 
-        Jenis_pembayaran = self.jenis_pembayaran()
-        Bayar = int(input("Masukan Nominal Bayar\t: "))
-        Kembalian = int(input("Masukan Jumlah Kembalian\t: "))
-        date_str = input("Masukkan tanggal transaksi (format: YYYY-MM-DD)\t: ") 
-        date = datetime.strptime(date_str, "%Y-%m-%d") 
-        Tgl_transaksi = date.date()
-        x = PrettyTable()
-        x.field_names = ["Id_pegawai", "Id_siswa","Id_paket_belajar", "Jenis_pembayaran", "Bayar", "Kembalian", "Tgl_transaksi"]
-        x.add_row([Id_pegawai, Id_siswa, Id_paket_belajar, Jenis_pembayaran, Bayar, Kembalian, Tgl_transaksi])
-        print(x)
-        yakin = str(input("Yakin ingin meng-input y/n? "))
-        if (yakin == 'y') :
+            Jenis_pembayaran = self.jenis_pembayaran()
+            Bayar = int(input("Masukan Nominal Bayar\t: "))
+            Kembalian, tagihan_tersisa = self.kembalian(Tagihan, Bayar)
+            Tgl_transaksi = datetime.now().date()
+
+            x = PrettyTable()
+            x.field_names = ["Id_pegawai", "Id_siswa","Id_paket_belajar", "Jenis_pembayaran", "Bayar", "Kembalian", "Tgl_transaksi"]
+            x.add_row([Id_pegawai, id_siswa, Id_Paket_belajar, Jenis_pembayaran, Bayar, Kembalian, Tgl_transaksi])
+            print(x)
+
             quary = """INSERT INTO transaksi(Id_pegawai, Id_siswa, Id_paket_belajar, Jenis_pembayaran, Bayar, Kembalian, Tgl_transaksi) VALUES (%s, %s, %s, %s, %s, %s, %s)"""
-            data = (Id_pegawai, Id_siswa, Id_paket_belajar, Jenis_pembayaran, Bayar, Kembalian, Tgl_transaksi)
-
+            data = (Id_pegawai, id_siswa, Id_Paket_belajar, Jenis_pembayaran, Bayar, Kembalian, Tgl_transaksi)
             self.db.insertValue(quary,data)
-            print("=== Anda Berhasil Meng-input transaksi ===")
-        else : 
-            print("=== Anda Gagal Meng-input transaksi ===")
+
+            query_tag = """UPDATE `siswa` SET `Tagihan`=%s WHERE Id_siswa=%s"""
+            edit = (tagihan_tersisa, id_siswa)
+            self.db.insertValue(query_tag, edit)
+            if tagihan_tersisa != 0 :
+                print(f"Tagihan anda masih : {tagihan_tersisa}")
+
+            print("=== Anda Berhasil Membayar Paket Belajar ===")
+
+        
+        except Exception as e :
+            print(e)
+
+    def kelas(self) :
+        while True :
+            print("\n=== Jenjang Pendidikan ===")
+            print("1. SD")
+            print("2. SMP")
+            print("3. SMA")
+            pilih = int(input("Pilih Jenjang Pendidikan\t: "))
+            if pilih == 1 :
+                kelas = int(input("Kelas berapa? (4/5/6) :"))
+                if kelas in [4,5,6] :
+                    xkel = str(kelas)+"SD"
+                    return xkel
+                else : 
+                    print("Pilihan tidak tersedia")
+            elif pilih == 2 :
+                kelas = int(input("Kelas berapa? (1/2/3) :"))
+                if kelas in [1,2,3] :
+                    xkel = str(kelas)+"SMP"
+                    return xkel
+                else : 
+                    print("Pilihan tidak tersedia")
+            elif pilih == 3 :
+                kelas = int(input("Kelas berapa? (1/2/3) :"))
+                if kelas in [1,2,3] :
+                    jurusan = str(input("Jurusan apa? (IPA/IPS) :"))
+                    if jurusan.upper() in ["IPA","IPS"] :
+                        xkel = str(kelas)+"SMA "+ jurusan.upper()
+                        return xkel
+                    else : 
+                        print("Pilihan tidak tersedia")
+                else : 
+                    print("Pilihan tidak tersedia")
+            else :
+                print("pilihan tidak tersedia harap pilih yang benar")
+     
+    def get_siswa(self) :
+        while True :
+            try :
+                print("=== Cari Siswa ===")
+                print("1. Bedasarkan Kelas")
+                print("2. Bedasarkan Id Siswa")
+                print("3. Kembali")
+                pilih = int(input("Pilih Menu : "))
+                if pilih == 1 :
+                    query_kelas = """SELECT Id_siswa, Nama,Kelas,Tagihan FROM siswa WHERE `Kelas`=%s"""
+                    kelas = self.kelas()
+                    self.db.selectValuepretty(query_kelas, (kelas, ))
+                    result = self.db.selectValue(query_kelas, (kelas, ))
+
+                    if not result :
+                        raise ValueError("Data tidak tersedia")
+
+                    a=0
+                    list_id = []
+                    for a in range(len(result)) :
+                        check_id_siswa = result[a][0]
+                        list_id.append(check_id_siswa)
+                    
+                    Id_siswa = int(input("Masukan Id siswa : "))
+
+                    if Id_siswa not in list_id :
+                        raise ValueError("Id siswa tidak ditemukan")
+                    
+                    query_siswa = """SELECT 
+                    `Id_siswa`, `Nama`, `Email`, `Id_paket_belajar`, `Nomor`, `Kelas`, `Jenis_kelamin`, `Alamat`, `Tagihan` 
+                    FROM `siswa` WHERE Id_siswa=%s"""
+
+                    self.db.selectValuepretty(query_kelas, (kelas, ))
+                    check = str(input("Data benar (y/n) ? "))
+                    if check.lower() == 'y' :
+                        resultsiswa = self.db.selectValue(query_siswa, (Id_siswa, ))
+                        id_siswa = resultsiswa[0][0]
+                        Id_Paket_belajar = resultsiswa[0][3]
+                        Tagihan = resultsiswa[0][8]
+                        return id_siswa, Id_Paket_belajar, Tagihan
+                    else :
+                        raise ValueError("Kembali ke menu cari siswa")
+
+
+                elif pilih == 2 :
+                    query_siswa = """SELECT 
+                    `Id_siswa`, `Nama`, `Email`, `Id_paket_belajar`, `Nomor`, `Kelas`, `Jenis_kelamin`, `Alamat`, `Tagihan` 
+                    FROM `siswa` WHERE Id_siswa=%s"""
+
+                    self.db.selectValuepretty(query_kelas, (kelas, ))
+                    resultsiswa = self.db.selectValue(query_siswa, (Id_siswa, ))
+                    if not resultsiswa :
+                        raise ValueError("Id siswa tidak tersedia")
+                    
+                    check = str(input("Data benar (y/n) ? "))
+                    if check.lower() == 'y' :
+                        id_siswa = resultsiswa[0][0]
+                        Id_Paket_belajar = resultsiswa[0][3]
+                        Tagihan = resultsiswa[0][8]
+                        return id_siswa, Id_Paket_belajar, Tagihan
+                    
+                    else :
+                        raise ValueError("Kembali ke menu cari siswa")
+                elif pilih == 3 :
+                    print("=== Kembali ke menu utama ===")
+                    break
+                else :
+                    print("=== Pilihan Tidak Tersedia ===")
+
+            except Exception as e :
+                print(e)
+                os.system('pause')
 
     def read_transaksi(self):
-        print("=== Read Transaksi ===")
-        query = """SELECT * FROM transaksi"""
-        self.db.selectValuepretty(query, data=None)
+        print("=== Lihat Transaksi ===")
+        print("1. Lihat bedasarkan Siswa")
+        print("2. Lihat bedasarkan Paket belajar")
+        print("3. Lihat bedasarkan Jenis pembayaran")
+        print("4. Lihat bedasarkan Tanggal Transaksi")
+        print("5. Lihat semua")
+        pilih = int(input("Pilih menu : ")) 
+        if pilih == 1 :
+            query = """SELECT * FROM transaksi WHERE Id_siswa=%s"""
+            data = int(input("Masukan id siswa : "))
+            self.db.selectValuepretty(query, (data, ))
+        elif pilih == 2 :
+            query = """SELECT * FROM transaksi WHERE Id_paket_belajar=%s"""
+            data =int(input("Masukan id paket belajar : "))
+            self.db.selectValuepretty(query, (data, ))
+        elif pilih == 3 :
+            query = """SELECT * FROM transaksi WHERE Jenis_pembayaran=%s"""
+            data = self.jenis_pembayaran()
+            self.db.selectValuepretty(query, (data,))
+        elif pilih == 4 :
+            query = """SELECT * FROM transaksi WHERE Tgl_transaksi=%s"""
+            data = input("Masukkan Tanggal (format: YYYY-MM-DD)\t: ")
+            self.db.selectValuepretty(query, (data, ))
+        elif pilih == 5 :
+            query = """SELECT * FROM transaksi"""
+            self.db.selectValuepretty(query, data=None)
+        else :
+            print("Pilihan tidak tersedia")
 
 class jadwal : 
     def __init__(self, db):
