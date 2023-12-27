@@ -383,7 +383,7 @@ class Guru:
                     `Password`=%s,
                     `Email`=%s,
                     `Nomor`=%s,
-                    `Alamat`=%s, WHERE `Id_guru`=%s"""
+                    `Alamat`=%s WHERE `Id_guru`=%s"""
         data = (Nama, Password, Email, Nomor, Alamat, Id_guru)
         self.db.insertValue(query, data)
 
