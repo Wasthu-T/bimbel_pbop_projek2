@@ -51,6 +51,36 @@ class login :
             except Exception as e:
                 print(e)
 
+    def cheking_jabatan(self, tabel) :
+        os.system('cls')
+        run = True
+        while run:
+            try:
+                query = ""f"SELECT * FROM {tabel} WHERE Email = %s"""
+                data = self.check_email()
+                result = self.db.selectValue(query, (data, ))
+
+                if result and len(result) > 0:  
+                    password = result[0][2]
+
+                    inppass = str(input("Masukan Password\t\t: "))
+                    if inppass == password:
+                        print("Login berhasil!")
+                        print(f"Selamat Datang {result[0][1]}")
+                        run = False 
+                        os.system('pause')
+                        id = result[0][0]
+                        nama = result[0][1]
+                        jabatan = result[0][9]
+                        return id, nama, jabatan
+                    else:
+                        raise ValueError("Email atau password salah")
+                else:
+                    raise ValueError("Email atau password salah")
+                    
+            except Exception as e:
+                print(e)
+
 
 class transaksi :
     def __init__(self, db):
