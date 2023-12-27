@@ -719,7 +719,7 @@ class jadwal_pelayanan :
     def get_guru(self, result) :
         return result[0][1],result[0][9], result[0][10]
 
-    def insert_jadwal(self):
+    def insert_jadwal_pelayanan(self):
         try :
             print("===== Input Jadwal =====")
             mapelku = self.mapel()
@@ -746,35 +746,11 @@ class jadwal_pelayanan :
             nama, mapel, gaji = self.get_guru(resultg)
 
 
-            Kelas = self.kelas()
             Jam_mulai, Jam_selesai = self.check_jam()
 
-            query = """SELECT * FROM paket_belajar WHERE Kelas=%s"""
-            data = (Kelas, )
-            self.db.selectValuepretty(query, data)
 
-            Id_paket = int(input("Masukan Id Belajar : "))
-            paket_query = """SELECT * FROM paket_belajar WHERE Id_paket_belajar=%s"""
-            result = self.db.selectValue(paket_query, (Id_paket,))
-
-            b= 0
-            check_paket = self.db.selectValue(query, data)
-            list_paket = []
-            for b in range(len(check_paket)) :
-                check_id_paket = check_paket[b][0]
-                list_paket.append(check_id_paket)
-
-            if Id_paket not in list_paket :
-                raise ValueError("=== Id Paket Belajar tidak ditemukan ===")
-
-            if not result:
-                raise ValueError("=== Id Paket Belajar tidak ditemukan ===")
-            
-            kelas, kategori = self.get_data_paket(result)
-
-
-            Tanggal_str = input("Masukkan Tanggal (format: YYYY-MM-DD)\t: ")
-            Tanggal = datetime.strptime(Tanggal_str, "%Y-%m-%d").date()
+            # Tanggal_str = input("Masukkan Tanggal (format: YYYY-MM-DD)\t: ")
+            # Tanggal = datetime.strptime(Tanggal_str, "%Y-%m-%d").date()
 
 
             ruang_query ="""SELECT * FROM `ruangan`"""
@@ -795,39 +771,33 @@ class jadwal_pelayanan :
             x.add_column("Mapel Guru", mapel)
             x.add_column("Kelas", mapel)
             x.add_column("Jam", f"{Jam_mulai}-{Jam_selesai}")
-            x.add_column("Tanggal", Tanggal)
+            # x.add_column("Tanggal", Tanggal)
             x.add_column("Id_ruangan", Id_ruangan)
             print(x)
             confirm = input("Apakah anda ingin melanjutkan tindakan ini (y/n): ")
             
             if confirm == 'y':
-                query = """INSERT INTO `jadwal`(`Id_guru`, `Id_paket_belajar`, `Kelas`, `Mapel`, `Jam_mulai`, `Jam_selesai`, `Tanggal`, `Id_ruangan`, `Paket_belajar`) 
+                query = """INSERT INTO `jadwal_pelayanan`(`Id_guru`, `Mapel`, `Jam_mulai_pelayanan`, `Jam_selesai_pelayanan`, `Id_ruangan`) 
                 VALUES 
-                (%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
-                data = (Id_guru, Id_paket, kelas, mapel, Jam_mulai, Jam_selesai, Tanggal, Id_ruangan, kategori)
+                (%s,%s,%s,%s,%s)"""
+                data = (Id_guru, mapel, Jam_mulai, Jam_selesai, Id_ruangan)
                 self.db.insertValue(query, data)
 
-                queryguru = """UPDATE `guru` SET 
-                    `Gaji`=%s,
-                    WHERE `Id_guru`=%s"""
-                tambahgaji = gaji+20000
-                dataguru =(tambahgaji, )
-                self.db.insertValue(queryguru, dataguru)
                 print("=== Anda Berhasil Meng-input Data Jadwal ===")
             else:
                 raise ValueError("=== Insert data anda gagal ===")
         except Exception as e :
             print(e)
 
-    def update_jadwal(self):
+    def update_jadwal_pelayanan(self):
         try : 
             print("=== Update Jadwal ===")
             self.read_jadwal()
-            Id_jadwal = int(input("Masukkan ID Jadwal yang akan diupdate: "))
+            Id_jadwal_pelayanan = int(input("Masukkan ID Jadwal yang akan diupdate: "))
             
-            query = """SELECT * FROM Jadwal WHERE Id_jadwal = %s"""
-            querytes = """SELECT * FROM Jadwal"""
-            data = (Id_jadwal,)
+            query = """SELECT * FROM jadwal_pelayanan WHERE Id_jadwal_pelayanan = %s"""
+            querytes = """SELECT * FROM jadwal_pelayanan	"""
+            data = (Id_jadwal_pelayanan,)
             a = 0
             check_id = self.db.selectValue(querytes, data=None)
             list_check = []
@@ -835,7 +805,7 @@ class jadwal_pelayanan :
                 check_id_jadwal = check_id[a][0]
                 list_check.append(check_id_jadwal)
 
-            if Id_jadwal not in list_check: 
+            if Id_jadwal_pelayanan not in list_check: 
                 raise ValueError("=== Id Jadwal tidak ditemukan ===")
                 
             if not check_id :
@@ -846,7 +816,7 @@ class jadwal_pelayanan :
             confirmation = input("Apakah Anda ingin melanjutkan proses update (y/n)? ").lower()
             
             if confirmation == 'y':
-                self.edit_jadwal(result, Id_jadwal)
+                self.edit_jadwal_pelayanan(result, Id_jadwal_pelayanan)
                 print("=== Data Jadwal berhasil diupdate ===")
             else:
                 print("=== Proses update dibatalkan ===")
@@ -855,7 +825,7 @@ class jadwal_pelayanan :
             print(e)
             os.system('pause')
 
-    def edit_jadwal(self, result, Id_jadwal) :
+    def edit_jadwal_pelayanan(self, result, Id_jadwal) :
         Id_guru = result[0][1]
         Bidang_mapel = result[0][2]
         Id_ruangan = result[0][5]
