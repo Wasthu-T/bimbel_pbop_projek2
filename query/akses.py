@@ -41,7 +41,7 @@ class akses_Siswa(Siswa):
                 self.delete_siswa(self.id)
             if pilih == 0 :
                 print(f"\n\t=== Terimakasih {self.nama} ===")
-                print("=== Jangan Lupa Datang Kembali ===\n")
+                print("\t=== Jangan Lupa Datang Kembali ===\n")
                 exit()
             else :
                 print("Pilihan tidak tersedia")
@@ -86,7 +86,7 @@ class akses_Guru(Guru):
                     self.update_guru()
                 elif pilih == 0 :
                     print(f"\n\t=== Terimakasih {self.nama} ===")
-                    print("=== Jangan Lupa Datang Kembali ===\n")
+                    print("\t=== Jangan Lupa Datang Kembali ===\n")
                     exit()
                 else :
                     print("Pilihan tidak tersedia")
@@ -165,7 +165,7 @@ class akses_Pegawai(Pegawai):
                 self.delete()
             elif pilih == 0 :
                 print(f"\n\t=== Terimakasih {self.nama} ===")
-                print("=== Jangan Lupa Datang Kembali ===\n")
+                print("\t=== Jangan Lupa Datang Kembali ===\n")
                 exit()
             else :
                 print("Pilihan tidak tersedia")
@@ -174,7 +174,7 @@ class akses_Pegawai(Pegawai):
     def Absen_pegawai(self) :
         while True :
             os.system('cls')
-            print(f"=== selamat datang {self.nama} ===")
+            print(f"=== Selamat Datang {self.nama} ===")
             print(f"=== Menu Absen ===")
             print(f"=== [1] Izin")
             print(f"=== [2] Absen Jam datang")
@@ -252,7 +252,7 @@ class akses_Pegawai(Pegawai):
     def ubah(self) :
         while True :
             os.system('cls')
-            print(f"=== selamat datang {self.nama} ===")
+            print(f"=== Selamat Datang {self.nama} ===")
             print(f"=== Menu Ubah ===")
             print("===[1] Ubah data diri")
             print("===[2] Ubah data ruang")
@@ -279,7 +279,7 @@ class akses_Pegawai(Pegawai):
     def delete(self) :
         while True :
             os.system('cls')
-            print(f"=== selamat datang {self.nama} ===")
+            print(f"=== Selamat Datang {self.nama} ===")
             print(f"=== Menu Hapus ===")
             print("===[1] Hapus data diri")
             print("===[2] Hapus data guru")
