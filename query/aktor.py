@@ -145,9 +145,10 @@ class Siswa:
             querypb = """SELECT * FROM `paket_belajar` WHERE Id_paket_belajar=%s"""
             resultpb = self.db.selectValue(querypb, (Id_paket_belajar,))
             Tagihan = resultpb[0][3]
+            kelas = resultpb[0][1]
 
-            query = """UPDATE siswa SET `Id_paket_belajar`= %s, Tagihan=%s WHERE `Id_siswa` = %s"""
-            data = (Id_paket_belajar, Tagihan, Id_siswa)
+            query = """UPDATE siswa SET `Id_paket_belajar`= %s, Tagihan=%s, Kelas=%s WHERE `Id_siswa` = %s"""
+            data = (Id_paket_belajar, Tagihan, kelas, Id_siswa)
             self.db.insertValue(query, data)
 
             print("Selamat Anda telah membeli paket belajar")
