@@ -25,7 +25,8 @@ class akses_Siswa(Siswa):
             print("==[2] Lihat Jadwal")
             print("==[3] Paket Belajar ")
             print("==[4] Edit Akun")
-            print("==[5] Detele")
+            print("==[5] Lihat Tagihan")
+            print("==[6] Detele")
             print("==[0] logout")
             pilih = int(input("Pilih menu : "))
             if pilih == 1 :
@@ -38,10 +39,12 @@ class akses_Siswa(Siswa):
             elif pilih == 4 :
                 self.update_siswa(self.id)
             elif pilih == 5 :
+                tr.bayar_tagihan(self.id)
+            elif pilih == 6 :
                 self.delete_siswa(self.id)
-            if pilih == 0 :
+            elif pilih == 0 :
                 print(f"\n\t=== Terimakasih {self.nama} ===")
-                print("\t=== Jangan Lupa Datang Kembali ===\n")
+                print("=== Jangan Lupa Datang Kembali ===\n")
                 exit()
             else :
                 print("Pilihan tidak tersedia")
@@ -86,7 +89,7 @@ class akses_Guru(Guru):
                     self.update_guru(self.id)
                 elif pilih == 0 :
                     print(f"\n\t=== Terimakasih {self.nama} ===")
-                    print("\t=== Jangan Lupa Datang Kembali ===\n")
+                    print("=== Jangan Lupa Datang Kembali ===\n")
                     exit()
                 else :
                     print("Pilihan tidak tersedia")
@@ -142,7 +145,7 @@ class akses_Pegawai(Pegawai):
         self.id = id
         self.nama = nama
         self.jabatan = jabatan
-        
+    
     def menu(self) :
         while True :
             os.system('cls')
@@ -152,7 +155,8 @@ class akses_Pegawai(Pegawai):
                 print("==[2] Cari Data")
                 print("==[3] Tambah Data")
                 print("==[4] Ubah Data")
-                print("==[5] Detele")
+                print("==[5] Transaksi")
+                print("==[6] Detele")
                 print("==[0] logout")
                 pilih = int(input("Pilih menu : "))
                 if pilih == 1 :
@@ -164,6 +168,8 @@ class akses_Pegawai(Pegawai):
                 elif pilih == 4 :
                     self.ubah()
                 elif pilih == 5 :
+                    tr.insert_transaksi(self.id)
+                elif pilih == 6 :
                     self.delete()
                 elif pilih == 0 :
                     print(f"\n\t=== Terimakasih {self.nama} ===")
@@ -193,11 +199,11 @@ class akses_Pegawai(Pegawai):
             else :
                 print("Pilihan tidak tersedia")
             os.system('pause')
-            
+
     def Absen_pegawai(self) :
         while True :
             os.system('cls')
-            print(f"=== Selamat Datang {self.nama} ===")
+            print(f"=== selamat datang {self.nama} ===")
             print(f"=== Menu Absen ===")
             print(f"=== [1] Izin")
             print(f"=== [2] Absen Jam datang")
@@ -275,7 +281,7 @@ class akses_Pegawai(Pegawai):
     def ubah(self) :
         while True :
             os.system('cls')
-            print(f"=== Selamat Datang {self.nama} ===")
+            print(f"=== selamat datang {self.nama} ===")
             print(f"=== Menu Ubah ===")
             print("===[1] Ubah data diri")
             print("===[2] Ubah data ruang")
@@ -302,7 +308,7 @@ class akses_Pegawai(Pegawai):
     def delete(self) :
         while True :
             os.system('cls')
-            print(f"=== Selamat Datang {self.nama} ===")
+            print(f"=== selamat datang {self.nama} ===")
             print(f"=== Menu Hapus ===")
             print("===[1] Hapus data diri")
             print("===[2] Hapus data guru")
