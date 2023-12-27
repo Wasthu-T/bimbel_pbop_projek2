@@ -34,6 +34,7 @@ class absen_pegawai :
         try :
             tanggal = datetime.now().date()
             Jam_selesai = datetime.now().time()
+            query = """SELECT * FROM `absen_pegawai` WHERE `Id_pegawai`=%s"""
             result = self.db.selectValue(query, (Id_pegawai,))
             i = 0 
             for i in range(len(result)) :
