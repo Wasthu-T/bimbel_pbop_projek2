@@ -418,7 +418,6 @@ class jadwal :
     def get_guru(self, result) :
         return result[0][1],result[0][9], result[0][10]
 
-
     def insert_jadwal(self):
         try :
             print("===== Input Jadwal =====")
@@ -1202,7 +1201,7 @@ class paket_belajar :
         self.db.selectValuepretty(query, data)
         result = self.db.selectValue(query, data)
 
-
+    
         test = str(input("Apa data ingin diupdate (y/n)? "))
         if test.lower() == 'y' :
             self.edit_paket_belajar(result, Id_paket_belajar)
@@ -1226,7 +1225,6 @@ class paket_belajar :
             
         else :
             print("=== Anda Gagal Menghapus Data Paket Belajar ===")
-
 
     def read_paket_belajar(self):
         print("=== Lihat Paket Belajar ===")
