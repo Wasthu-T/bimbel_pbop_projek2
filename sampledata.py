@@ -51,7 +51,7 @@ guru = """INSERT INTO Guru(Nama, Email, Password, Nomor, Jenis_kelamin, Tgl_lahi
 pegawai = """INSERT INTO Pegawai(Nama, Password, Email, Nomor, Jenis_kelamin, Tgl_lahir, Alamat, Status_pekerja, Jabatan, Tunjangan, Gaji) VALUES 
             ('Ayu Maulida', 'ayuma123', 'Ayuma11@gmail.com', '085337200879', 'Perempuan', '1999-12-10', 'Gejayan', 'Tetap', 'Manager', '0', '5000000'),
             ('Ilham Pratama', 'ilham123', 'Ilham12@gmail.com', '085654789543', 'Laki-laki', '2000-05-17', 'Kaliurang', 'Tetap', 'Admin', '0', '3000000'),
-            ('Andi Irawan', 'andi123', 'Andi13gmail.com', '085743209188', 'Laki-laki', '2002-19-17', 'Sleman', 'Kontrak', 'OB', '0', '1000000');"""
+            ('Andi Irawan', 'andi123', 'Andi13@gmail.com', '085743209188', 'Laki-laki', '2002-19-17', 'Sleman', 'Kontrak', 'OB', '0', '1000000');"""
 
 # -- Data untuk tabel Ruangan
 ruangan = """INSERT INTO ruangan(Kondisi_ruangan, Kapasitas_kursi) VALUES 
