@@ -120,19 +120,28 @@ class Siswa:
             print("=== Anda Gagal Meng-update Data Siswa ===")
 
     def delete_siswa(self, Id_siswa):
-        print("=== Delete Siswa ===")
-        query = """SELECT * FROM siswa WHERE Id_siswa = %s"""
-        data = (Id_siswa,)
-        self.db.selectValuepretty(query, data)
-        test = str(input("Apa data ingin dihapus (y/n)? "))
-        if test.lower() == 'y' :
-            query = """DELETE FROM siswa WHERE Id_siswa = %s """
+        try :
+            print("=== Delete Siswa ===")
+            query = """SELECT * FROM siswa WHERE Id_siswa = %s"""
             data = (Id_siswa,)
-            self.db.insertValue(query, data)
-            print("=== Anda Berhasil Menghapus Data Siswa ===")
-            
-        else :
-            print("=== Anda Gagal Menghapus Data Siswa ===")
+            self.db.selectValuepretty(query, data)
+            result = self.db.selectValue(query, data)
+            tagihan = result[0][9]
+            if tagihan != 0 :
+                raise ValueError("Anda masih memiliki tagihan")
+
+
+            test = str(input("Apa data ingin dihapus (y/n)? "))
+            if test.lower() == 'y' :
+                query = """DELETE FROM siswa WHERE Id_siswa = %s """
+                data = (Id_siswa,)
+                self.db.insertValue(query, data)
+                print("=== Anda Berhasil Menghapus Data Siswa ===")
+                
+            else :
+                print("=== Anda Gagal Menghapus Data Siswa ===")
+        except Exception as e :
+            print(e)
 
     def tambah_paket(self, Id_siswa, Id_paket_belajar) :
         try :
