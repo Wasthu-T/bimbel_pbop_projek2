@@ -1034,7 +1034,7 @@ class ruangan :
         print("=== Lihat Ruangan ===")
         print("1. Lihat semua")
         print("2. Lihat Ruangan Layak")
-        print("2. Lihat Ruangan Tidak layak")
+        print("3. Lihat Ruangan Tidak layak")
         pilih = int(input("Pilih menu : "))
         if pilih == 1 :
             query = """SELECT * FROM ruangan"""
