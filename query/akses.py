@@ -44,7 +44,7 @@ class akses_Siswa(Siswa):
                 self.delete_siswa(self.id)
             elif pilih == 0 :
                 print(f"\n\t=== Terimakasih {self.nama} ===")
-                print("=== Jangan Lupa Datang Kembali ===\n")
+                print("\t=== Jangan Lupa Datang Kembali ===\n")
                 exit()
             else :
                 print("Pilihan tidak tersedia")
@@ -170,7 +170,7 @@ class akses_Pegawai(Pegawai):
                     self.delete()
                 elif pilih == 0 :
                     print(f"\n\t=== Terimakasih {self.nama} ===")
-                    print("=== Jangan Lupa Datang Kembali ===\n")
+                    print("\t=== Jangan Lupa Datang Kembali ===\n")
                     exit()
                 else :
                     print("Pilihan tidak tersedia")
@@ -191,7 +191,7 @@ class akses_Pegawai(Pegawai):
                 self.delete_Pegawai(self.id)
             elif pilih == 0 :
                 print(f"\n\t=== Terimakasih {self.nama} ===")
-                print("=== Jangan Lupa Datang Kembali ===\n")
+                print("\t=== Jangan Lupa Datang Kembali ===\n")
                 exit()
             else :
                 print("Pilihan tidak tersedia")
