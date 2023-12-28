@@ -35,7 +35,7 @@ class login :
                 if result and len(result) > 0:  
                     password = result[0][2]
 
-                    inppass = str(input("Masukan Password\t\t: "))
+                    inppass = str(input("Masukan Password\t: "))
                     if inppass == password:
                         print("Login berhasil!")
                         print(f"Selamat Datang {result[0][1]}")
@@ -65,7 +65,7 @@ class login :
                 if result and len(result) > 0:  
                     password = result[0][2]
 
-                    inppass = str(input("Masukan Password\t\t: "))
+                    inppass = str(input("Masukan Password\t: "))
                     if inppass == password:
                         print("Login berhasil!")
                         print(f"Selamat Datang {result[0][1]}")
@@ -227,7 +227,6 @@ class transaksi :
                 print("pilihan tidak tersedia harap pilih yang benar")
      
     def get_siswa(self) :
-        while True :
             try :
                 print("=== Cari Siswa ===")
                 print("1. Bedasarkan Kelas")
@@ -291,7 +290,7 @@ class transaksi :
                         raise ValueError("Kembali ke menu cari siswa")
                 elif pilih == 3 :
                     print("=== Kembali ke menu utama ===")
-                    break
+                    
                 else :
                     print("=== Pilihan Tidak Tersedia ===")
 
