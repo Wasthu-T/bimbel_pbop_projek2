@@ -37,8 +37,10 @@ class login :
 
                     inppass = str(input("Masukan Password\t: "))
                     if inppass == password:
-                        print("Login berhasil!")
-                        print(f"Selamat Datang {result[0][1]}")
+                        print("="*35)
+                        print("===\tLogin Berhasil!\t\t===")
+                        print(f"== Selamat Datang {result[0][1]} ==")
+                        print("="*35)
                         run = False 
                         os.system('pause')
                         id = result[0][0]
@@ -67,8 +69,10 @@ class login :
 
                     inppass = str(input("Masukan Password\t: "))
                     if inppass == password:
-                        print("Login berhasil!")
-                        print(f"Selamat Datang {result[0][1]}")
+                        print("="*35)
+                        print("===\tLogin Berhasil!\t\t===")
+                        print(f"== Selamat Datang {result[0][1]} ==")
+                        print("="*35)
                         run = False 
                         os.system('pause')
                         id = result[0][0]
@@ -199,21 +203,21 @@ class transaksi :
             print("3. SMA")
             pilih = int(input("Pilih Jenjang Pendidikan\t: "))
             if pilih == 1 :
-                kelas = int(input("Kelas berapa? (4/5/6) :"))
+                kelas = int(input("Kelas berapa? (4/5/6) \t: "))
                 if kelas in [4,5,6] :
                     xkel = str(kelas)+"SD"
                     return xkel
                 else : 
                     print("Pilihan tidak tersedia")
             elif pilih == 2 :
-                kelas = int(input("Kelas berapa? (1/2/3) :"))
+                kelas = int(input("Kelas berapa? (1/2/3) \t: "))
                 if kelas in [1,2,3] :
                     xkel = str(kelas)+"SMP"
                     return xkel
                 else : 
                     print("Pilihan tidak tersedia")
             elif pilih == 3 :
-                kelas = int(input("Kelas berapa? (1/2/3) :"))
+                kelas = int(input("Kelas berapa? (1/2/3) \t: "))
                 if kelas in [1,2,3] :
                     jurusan = str(input("Jurusan apa? (IPA/IPS) :"))
                     if jurusan.upper() in ["IPA","IPS"] :
@@ -972,8 +976,6 @@ class ruangan :
         while True :
             Kondisi_ruangan = result[0][1]
             Kapasitas_kursi = result[0][2]
-            print(Kondisi_ruangan)
-            print(Kapasitas_kursi)
             print("=== Edit Value ===")
             print("1. Kondisi Ruangan")
             print("2. Kapasitas Kursi")
