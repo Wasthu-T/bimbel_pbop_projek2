@@ -13,7 +13,7 @@ class Siswa:
         run = True
         while run :
             try:
-                Email = str(input("Masukan Email\t\t: "))
+                Email = str(input("Masukan Email\t\t\t: "))
                 validate_email(Email)
                 return Email
             except EmailNotValidError as e:
@@ -22,8 +22,8 @@ class Siswa:
     def confirm_password(self) :
         while True :
             try :
-                password = str(input("Masukan Password\t:"))
-                conf_pass = str(input("Masukan Password sekali lagi\t:"))
+                password = str(input("Masukan Password\t\t: "))
+                conf_pass = str(input("Masukan Password sekali lagi\t: "))
                 if password != conf_pass :
                     raise ValueError("Masukan password yang benar")
                 return conf_pass
@@ -35,7 +35,7 @@ class Siswa:
             print("\n=== Jenis Kelamin ===")
             print("1. Laki-laki")
             print("2. Perempuan")
-            pilih = int(input("Pilih Jenis Kelamin\t: "))
+            pilih = int(input("Pilih Jenis Kelamin\t\t: "))
             if pilih == 1 :
                 return "Laki-laki"
             elif pilih == 2 :
@@ -47,12 +47,12 @@ class Siswa:
         print("===== Input Siswa =====")
         Id_paket_belajar = None
 
-        Nama = str(input("Masukan Nama\t: "))
+        Nama = str(input("Masukan Nama\t\t\t: "))
         Password = self.confirm_password()
         Email = self.check_email()
-        Nomor = "0" + str(int(input("Masukan Nomor\t: ")))
+        Nomor = "0" + str(int(input("Masukan Nomor\t\t\t: ")))
         Jenis_kelamin = self.jenis_kelamin()
-        Alamat = str(input("Masukkan Alamat\t: "))
+        Alamat = str(input("Masukkan Alamat\t\t\t: "))
         Tagihan = 0
         x = PrettyTable()
         print("=== Data diri : ")
