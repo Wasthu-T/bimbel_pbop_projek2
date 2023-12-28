@@ -26,7 +26,7 @@ class absen_pegawai :
                     (%s,%s,%s,%s,%s)"""
             data = (Id_pegawai, tanggal, jam_datang, Jam_selesai, Absen)
             self.db.insertValue(query,data)
-            print(f"Anda Berhasil Absen Datang pada {tanggal}")
+            print(f"Anda Berhasil Absen Datang pada \nTanggal :{tanggal} \nJam \t:{jam_datang}")
         except Exception as e :
             print(e)
 
@@ -53,7 +53,7 @@ class absen_pegawai :
             """
             data = (Jam_selesai, Absen, tanggal, Id_pegawai)
             self.db.insertValue(query, data)
-            print(f"Anda Berhasil Absen Pulang pada {tanggal}")
+            print(f"Anda Berhasil Absen Pulang pada \nTanggal :{tanggal} \nJam \t:{Jam_selesai}")
         except Exception as e :
             print(e)
 
@@ -115,7 +115,7 @@ class absen_guru :
                     (%s,%s,%s,%s,%s)"""
             data = (Id_guru, tanggal, jam_datang, Jam_selesai, Absen)
             self.db.insertValue(query,data)
-            print(f"Anda Berhasil Absen Datang pada {tanggal}")
+            print(f"Anda Berhasil Absen Datang pada \nTanggal :{tanggal} \nJam \t:{jam_datang}")
 
         except Exception as e :
             print(e)
@@ -144,7 +144,7 @@ class absen_guru :
             """
             data = (Jam_selesai, Absen, tanggal, Id_guru)
             self.db.insertValue(query, data)
-            print(f"Anda Berhasil Absen Pulang pada {tanggal}")
+            print(f"Anda Berhasil Absen Datang pada \nTanggal :{tanggal} \nJam \t:{Jam_selesai}")
         except Exception as e :
             print(e)
 
@@ -217,12 +217,12 @@ class absen_guru :
                     id_jadwal_tes = result[i][3]
                     if (id_siswa == id_siswa_tes) and (id_jadwal == id_jadwal_tes):
                         raise ValueError("Anda telah absen hari ini")
-                    
+                
                 query = """INSERT INTO `absen_siswa`(`Id_guru`, `Id_siswa`, `Id_jadwal`, `Tanggal`, `Absen`) 
                 VALUES (%s,%s,%s,%s,%s)"""
                 data = (Id_guru,id_siswa,id_jadwal,tanggal,absen)
                 self.db.insertValue(query, data)
-                print(f"Siswa dengan {id_siswa} berhasil absen")
+                print(f"Id Siswa {id_siswa} berhasil absen")
                 tambah = str(input("Ingin Absen lagi (y/n) ? "))
                 if tambah.lower() == "y" :
                     continue
