@@ -203,34 +203,82 @@ class absen_guru :
             else :
                 print("pilihan tidak tersedia harap pilih yang benar")
     def absen_siswa(self,Id_guru) :
-        while True :
-            try :
-                tanggal = datetime.now().date()
-                id_siswa = int(input("Id siswa : "))
-                id_jadwal = int(input("Id jadwal : "))
-                query = """SELECT * FROM `absen_siswa` WHERE `Id_jadwal`=%s"""
-                result = self.db.selectValue(query, (Id_guru,))
-                i = 0 
-                absen = self.absen_s()
-                for i in range(len(result)) :
-                    id_siswa_tes = result[i][2]
-                    id_jadwal_tes = result[i][3]
-                    if (id_siswa == id_siswa_tes) and (id_jadwal == id_jadwal_tes):
-                        raise ValueError("Anda telah absen hari ini")
-                
-                query = """INSERT INTO `absen_siswa`(`Id_guru`, `Id_siswa`, `Id_jadwal`, `Tanggal`, `Absen`) 
-                VALUES (%s,%s,%s,%s,%s)"""
-                data = (Id_guru,id_siswa,id_jadwal,tanggal,absen)
-                self.db.insertValue(query, data)
-                print(f"Id Siswa {id_siswa} berhasil absen")
-                tambah = str(input("Ingin Absen lagi (y/n) ? "))
-                if tambah.lower() == "y" :
-                    continue
-                else :
-                    break
+            id_jadwal_guru = int(input("Id jadwal : "))
+            i = 0 
+            selectabsen = """SELECT * FROM `absen_siswa` WHERE `Id_guru`=%s"""
+            result = self.db.selectValue(selectabsen, (Id_guru,))
+            list_id_siswa = []
+            list_id_jadwal = []
+            for i in range(len(result)) :
+                id_siswa_tes = result[i][2]
+                id_jadwal_tes = result[i][3]
+                list_id_siswa.append(id_siswa_tes)
+                list_id_jadwal.append(id_jadwal_tes)
+                    
+            while True :
+                try :
+                    tanggal = datetime.now().date()
 
-            except Exception as e :
-                print(e)
+                    
+                    i = 0 
+                    selectjadwals = """SELECT * FROM jadwal WHERE Id_guru=%s"""
+                    resultjadwal = self.db.selectValue(selectjadwals,(Id_guru, ) )
+                    print(resultjadwal)
+                    list_jadwal = []
+                    for i in range(len(resultjadwal)) :
+                        id_jadwal = resultjadwal[i][0]
+                        check_id_guru = resultjadwal[i][1]
+                        list_jadwal.append(id_jadwal)
+                    print(list_jadwal)
+                    if (id_jadwal_guru not in list_jadwal) and (Id_guru == check_id_guru) :
+                        raise ValueError("Id jadwal tidak ada pada jadwal anda")
+                    
+                    print("Berhasil 1")
+                    
+                    id_siswa = int(input("Id siswa : "))
+                    absen = self.absen_s()
+                    if (id_siswa in list_id_siswa) and (id_jadwal in list_id_jadwal):
+                        raise ValueError("Anda telah absen hari ini")
+
+                    select_jadwal = """SELECT * FROM `jadwal` WHERE Id_jadwal=%s"""
+                    result_jadwal = self.db.selectValue(select_jadwal, (id_jadwal_guru, ))
+                    tgl = result_jadwal[0][7]
+                    paket_belajar = result_jadwal[0][2]
+
+                    if tgl != tanggal :
+                        raise ValueError("Salah tanggal pelajaran")
+                    
+                    select_siswa = """SELECT * FROM `siswa` WHERE Id_paket_belajar=%s"""
+                    select_id = self.db.selectValue(select_siswa, (paket_belajar, ))
+                    list_check_siswa = []
+                    i = 0
+                    for i in range(len(select_id)) :
+                        check_id_siswa = select_id[0][0]
+                        list_check_siswa.append(check_id_siswa)
+
+
+                    if id_siswa not in list_check_siswa :
+                        raise ValueError("Id siswa tidak mengambil paket belajar ini")
+                    
+
+                    query = """INSERT INTO `absen_siswa`(`Id_guru`, `Id_siswa`, `Id_jadwal`, `Tanggal`, `Absen`) 
+                    VALUES (%s,%s,%s,%s,%s)"""
+                    data = (Id_guru,id_siswa,id_jadwal,tanggal,absen)
+                    self.db.insertValue(query, data)
+                    print(f"Siswa dengan id siswa {id_siswa} berhasil absen")
+                    tambah = str(input("Ingin Absen lagi (y/n) ? "))
+                    if tambah.lower() == "y" :
+                        continue
+                    else :
+                        break
+
+                except Exception as e :
+                    print(e)
+                    tambah = str(input("Ingin Melanjutkan (y/n) ? "))
+                    if tambah.lower() == "y" :
+                        continue
+                    else :
+                        break
 class absen_siswa :
     def __init__(self, db):
         self.db = db
