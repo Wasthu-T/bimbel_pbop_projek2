@@ -403,7 +403,7 @@ class jadwal :
             if waktu_selesai > batas_waktu:
                 raise ValueError("Durasi pembelajaran tidak boleh lebih dari 1 jam 30 menit")
 
-            return waktu_mulai,waktu_selesai
+            return jam_mulai,jam_selesai
 
         except Exception as e:
             print(e)
@@ -417,7 +417,7 @@ class jadwal :
     def get_guru(self, result) :
         return result[0][1],result[0][9], result[0][10]
 
-        def insert_jadwal(self):
+    def insert_jadwal(self):
         try :
             print("===== Input Jadwal =====")
             mapelku = self.mapel()
@@ -443,14 +443,8 @@ class jadwal :
                 raise ValueError("=== Id Guru tidak ditemukan ===")
             nama, mapel, gaji = self.get_guru(resultg)
 
-            print(nama,mapel,gaji)
-            print(Id_guru)
-
-
             Kelas = self.kelas()
-            print(Kelas)
             Jam_mulai, Jam_selesai = self.check_jam()
-            print(Jam_mulai,Jam_selesai)
 
             query = """SELECT * FROM paket_belajar WHERE Kelas=%s"""
             data = (Kelas, )
@@ -472,11 +466,8 @@ class jadwal :
 
             if not result:
                 raise ValueError("=== Id Paket Belajar tidak ditemukan ===")
-            print(Id_paket)
+
             kelas, kategori = self.get_data_paket(result)
-            print(kelas,kategori)
-
-
             Tanggal_str = input("Masukkan Tanggal (format: YYYY-MM-DD)\t: ")
             Tanggal = datetime.strptime(Tanggal_str, "%Y-%m-%d").date()
 
@@ -491,7 +482,6 @@ class jadwal :
                 raise ValueError("=== Id Ruang tidak ditemukan ===")
             if resultR[0][1] == "Tidak layak" :
                 raise ValueError("=== Ruang Tidak Layak ===")
-            print(resultR)
 
             x = PrettyTable()
             x.field_names = ["Data", "Value"]
@@ -523,7 +513,6 @@ class jadwal :
                 raise ValueError("=== Insert data anda gagal ===")
         except Exception as e :
             print(e)
-
     def update_jadwal(self):
         try : 
             print("=== Update Jadwal ===")
@@ -717,7 +706,7 @@ class jadwal_pelayanan :
             if waktu_selesai > batas_waktu:
                 raise ValueError("Durasi pembelajaran tidak boleh lebih dari 1 jam 30 menit")
 
-            return waktu_mulai,waktu_selesai
+            return jam_mulai,jam_selesai
 
         except Exception as e:
             print(e)
@@ -755,10 +744,6 @@ class jadwal_pelayanan :
             Jam_mulai, Jam_selesai = self.check_jam()
 
 
-            # Tanggal_str = input("Masukkan Tanggal (format: YYYY-MM-DD)\t: ")
-            # Tanggal = datetime.strptime(Tanggal_str, "%Y-%m-%d").date()
-
-
             ruang_query ="""SELECT * FROM `ruangan`"""
             self.db.selectValuepretty(ruang_query, data=None)
 
@@ -772,13 +757,13 @@ class jadwal_pelayanan :
 
 
             x = PrettyTable()
-            x.add_column("Id Guru", Id_guru)
-            x.add_column("Nama Guru", nama)
-            x.add_column("Mapel Guru", mapel)
-            x.add_column("Kelas", mapel)
-            x.add_column("Jam", f"{Jam_mulai}-{Jam_selesai}")
-            # x.add_column("Tanggal", Tanggal)
-            x.add_column("Id_ruangan", Id_ruangan)
+            x.field_names = ["Data", "Value"]
+            x.add_row(["Id Guru", Id_guru])
+            x.add_row(["Nama Guru", nama])
+            x.add_row(["Mapel Guru", mapel])
+            x.add_row(["Kelas", mapel])
+            x.add_row(["Jam", f"{Jam_mulai}-{Jam_selesai}"])
+            x.add_row(["Id_ruangan", Id_ruangan])
             print(x)
             confirm = input("Apakah anda ingin melanjutkan tindakan ini (y/n): ")
             
@@ -794,7 +779,7 @@ class jadwal_pelayanan :
                 raise ValueError("=== Insert data anda gagal ===")
         except Exception as e :
             print(e)
-
+            
     def update_jadwal_pelayanan(self):
         try : 
             print("=== Update Jadwal ===")
