@@ -417,7 +417,7 @@ class jadwal :
     def get_guru(self, result) :
         return result[0][1],result[0][9], result[0][10]
 
-    def insert_jadwal(self):
+        def insert_jadwal(self):
         try :
             print("===== Input Jadwal =====")
             mapelku = self.mapel()
@@ -443,9 +443,14 @@ class jadwal :
                 raise ValueError("=== Id Guru tidak ditemukan ===")
             nama, mapel, gaji = self.get_guru(resultg)
 
+            print(nama,mapel,gaji)
+            print(Id_guru)
+
 
             Kelas = self.kelas()
+            print(Kelas)
             Jam_mulai, Jam_selesai = self.check_jam()
+            print(Jam_mulai,Jam_selesai)
 
             query = """SELECT * FROM paket_belajar WHERE Kelas=%s"""
             data = (Kelas, )
@@ -467,8 +472,9 @@ class jadwal :
 
             if not result:
                 raise ValueError("=== Id Paket Belajar tidak ditemukan ===")
-            
+            print(Id_paket)
             kelas, kategori = self.get_data_paket(result)
+            print(kelas,kategori)
 
 
             Tanggal_str = input("Masukkan Tanggal (format: YYYY-MM-DD)\t: ")
@@ -481,20 +487,21 @@ class jadwal :
             Id_ruangan = int(input("Masukkan ID Ruangan\t: "))
             select_query = """SELECT * FROM `ruangan` WHERE Id_ruangan=%s"""
             resultR = self.db.selectValue(select_query, (Id_ruangan,))
-            if not resultR :
+            if not resultR[0][0] :
                 raise ValueError("=== Id Ruang tidak ditemukan ===")
             if resultR[0][1] == "Tidak layak" :
                 raise ValueError("=== Ruang Tidak Layak ===")
-
+            print(resultR)
 
             x = PrettyTable()
-            x.add_column("Id Guru", Id_guru)
-            x.add_column("Nama Guru", nama)
-            x.add_column("Mapel Guru", mapel)
-            x.add_column("Kelas", mapel)
-            x.add_column("Jam", f"{Jam_mulai}-{Jam_selesai}")
-            x.add_column("Tanggal", Tanggal)
-            x.add_column("Id_ruangan", Id_ruangan)
+            x.field_names = ["Data", "Value"]
+            x.add_row(["Id Guru", Id_guru])
+            x.add_row(["Nama Guru", nama])
+            x.add_row(["Mapel Guru", mapel])
+            x.add_row(["Kelas", kelas])
+            x.add_row(["Jam", f"{Jam_mulai}-{Jam_selesai}"])
+            x.add_row(["Tanggal", Tanggal])
+            x.add_row(["Id_ruangan", Id_ruangan])
             print(x)
             confirm = input("Apakah anda ingin melanjutkan tindakan ini (y/n): ")
             
@@ -506,10 +513,10 @@ class jadwal :
                 self.db.insertValue(query, data)
 
                 queryguru = """UPDATE `guru` SET 
-                    `Gaji`=%s,
+                    `Gaji`=%s
                     WHERE `Id_guru`=%s"""
                 tambahgaji = gaji+20000
-                dataguru =(tambahgaji, )
+                dataguru =(tambahgaji, Id_guru)
                 self.db.insertValue(queryguru, dataguru)
                 print("=== Anda Berhasil Meng-input Data Jadwal ===")
             else:
