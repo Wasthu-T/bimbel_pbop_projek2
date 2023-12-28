@@ -33,7 +33,7 @@ guru ='''CREATE TABLE IF NOT EXISTS Guru(
    Alamat varchar(200) NOT NULL,
    Status_pekerja ENUM('Kontrak', 'Tetap') NOT NULL,
    Bidang_mapel ENUM('Matematika', 'Bahasa Indonesia', 'Bahasa Inggris', 'Ilmu Pengetahuan Alam', 'Biologi', 'Kimia', 'Fisika', 'Geografi', 'Ekonomi', 'Sosiologi', 'Sejarah', 'Tes Potensi Skolastik') NOT NULL,
-   Gaji varchar(100) NOT NULL
+   Gaji int(20) NOT NULL
     );
 '''
 
