@@ -583,7 +583,7 @@ class Pegawai:
             print("=== Anda Gagal Mendaftar Sebagai Pegawai ===")
 
 
-        def edit_pegawai(self, result, Id_pegawai) : #done
+    def edit_pegawai(self, result, Id_pegawai) : #done
         while True : 
             Nama = result[0][1]
             Password = result[0][2]
