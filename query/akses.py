@@ -89,7 +89,7 @@ class akses_Guru(Guru):
                     self.update_guru(self.id)
                 elif pilih == 0 :
                     print(f"\n\t=== Terimakasih {self.nama} ===")
-                    print("=== Jangan Lupa Datang Kembali ===\n")
+                    print("\t=== Jangan Lupa Datang Kembali ===\n")
                     exit()
                 else :
                     print("Pilihan tidak tersedia")
@@ -155,8 +155,7 @@ class akses_Pegawai(Pegawai):
                 print("==[2] Cari Data")
                 print("==[3] Tambah Data")
                 print("==[4] Ubah Data")
-                print("==[5] Transaksi")
-                print("==[6] Detele")
+                print("==[5] Detele")
                 print("==[0] logout")
                 pilih = int(input("Pilih menu : "))
                 if pilih == 1 :
@@ -168,8 +167,6 @@ class akses_Pegawai(Pegawai):
                 elif pilih == 4 :
                     self.ubah()
                 elif pilih == 5 :
-                    tr.insert_transaksi(self.id)
-                elif pilih == 6 :
                     self.delete()
                 elif pilih == 0 :
                     print(f"\n\t=== Terimakasih {self.nama} ===")
@@ -200,6 +197,7 @@ class akses_Pegawai(Pegawai):
                 print("Pilihan tidak tersedia")
             os.system('pause')
 
+    
     def Absen_pegawai(self) :
         while True :
             os.system('cls')
@@ -262,7 +260,7 @@ class akses_Pegawai(Pegawai):
             print("===[0] kembali")
             pilih = int(input("Pilih menu : "))
             if pilih == 1 : 
-                pass
+                tr.insert_transaksi(self.id)
             elif pilih == 2 : 
                 ja.insert_jadwal()
             elif pilih == 3 : 
