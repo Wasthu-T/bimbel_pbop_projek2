@@ -985,13 +985,11 @@ class ruangan :
                 query = """UPDATE `ruangan` SET `Kondisi_ruangan`=%s WHERE `Id_ruangan`=%s"""
                 data = (Kondisi_ruangan, Id_ruangan)
                 self.db.insertValue(query, data)
-                print(Kondisi_ruangan)
             elif pilih == 2:
                 Kapasitas_kursi = int(input("Masukan Kapasitas Kursi\t: "))
                 query = """UPDATE `ruangan` SET `Kapasitas_kursi`=%s WHERE `Id_ruangan`=%s"""
                 data = (Kapasitas_kursi, Id_ruangan)
                 self.db.insertValue(query, data)
-                print(Kapasitas_kursi)
             else : 
                 print("Pilihan tidak tersedia")
             lanjut = str(input("Ganti data lain (y/n)? "))
